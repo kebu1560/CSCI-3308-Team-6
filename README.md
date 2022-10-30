@@ -1,1 +1,3 @@
 # CSCI-3308-Team-6
+
+UniSpot is a new way to connect with your university! Create a student account with just your city and school to see your university’s favorite songs, artists, and albums. Once you have created an account, you can add your Spotify playlists, songs, albums, or artists that you are listening to. Alternatively, you can create an artist account to see which university is your biggest fan, which will help you target the best places to tour! 
