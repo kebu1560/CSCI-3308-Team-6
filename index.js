@@ -61,7 +61,7 @@ app.use(
 //   };
   
 // Authentication Required
-app.use(auth);
+// app.use(auth);
 
 
 
