@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+var querystring = require('querystring');
+const { URLSearchParams } = require('url');
 
 // database configuration
 const dbConfig = {
@@ -45,6 +47,47 @@ app.use(
         extended: true,
     })
 );
+
+
+
+
+var client_id = '01ae3dd2c72e46ed93ff6e019e9b387d';
+var client_secret = '';
+var state = 'fdsgfdsgrwv';
+
+app.get('/', (req, res) =>{
+    console.log('/ route');
+    res.send('home');
+});
+
+app.get('/callback', (req, res) => {
+    client_secret = req.query.code;
+    console.log(req.query.code);
+    
+    res.send('callback');
+  });
+
+
+
+
+app.get('/login', (req, res) => {
+
+    var state = "dfsgfdsgfdsgf";
+    var scope = 'user-read-private user-read-email';
+    var redirect_uri = 'http://localhost:3000/callback';
+
+    params = {
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+    };
+
+    console.log('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
+    res.redirect('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
+    
+});
 
 
 
