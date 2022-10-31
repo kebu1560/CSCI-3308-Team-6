@@ -53,6 +53,7 @@ app.use(
 
 var client_id = '01ae3dd2c72e46ed93ff6e019e9b387d';
 var client_secret = '';
+var client_code = '';
 var state = 'fdsgfdsgrwv';
 
 app.get('/', (req, res) =>{
@@ -60,11 +61,36 @@ app.get('/', (req, res) =>{
     res.send('home');
 });
 
-app.get('/callback', (req, res) => {
+app.get('/callback', async (req, res) => {
     client_secret = req.query.code;
     console.log(req.query.code);
+
+    var redirect_uri = 'http://localhost:3000/';
+    var config = {
+        headers:  {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        }
+    };
     
-    res.send('callback');
+
+    var params = {
+        code: client_secret,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+    };
+
+    var tokenUrl = 'https://accounts.spotify.com/api/token';
+
+    await axios.post(tokenUrl + new URLSearchParams(params).toString(), params, config)
+        .then(results => {
+            console.log(results); 
+        })
+        .catch(err => {
+            // Handle errors
+            res.send(err);
+        
+        });
   });
 
 
