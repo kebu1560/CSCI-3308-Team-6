@@ -49,10 +49,10 @@ app.use(
 );
 
 
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
-
-var client_id = '01ae3dd2c72e46ed93ff6e019e9b387d';
-var client_secret = '';
 var client_code = '';
 var state = 'fdsgfdsgrwv';
 
@@ -62,54 +62,60 @@ app.get('/', (req, res) =>{
 });
 
 app.get('/callback', async (req, res) => {
-    client_secret = req.query.code;
+    console.log('/callback route');
+
+    code = req.query.code;
     console.log(req.query.code);
 
-    var redirect_uri = 'http://localhost:3000/';
-    var config = {
-        headers:  {
+    const authUrl = 'https://accounts.spotify.com/api/token'
+
+    axios({
+        url: authUrl,
+        method: 'POST',
+        headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-        }
-    };
-    
-
-    var params = {
-        code: client_secret,
-        redirect_uri: redirect_uri,
-        grant_type: 'authorization_code'
-    };
-
-    var tokenUrl = 'https://accounts.spotify.com/api/token';
-
-    await axios.post(tokenUrl + new URLSearchParams(params).toString(), params, config)
+            // From Spotify documentation
+            'Authorization': 'Basic ' + (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
+        },
+        // data must be x-www-urlform-encoded, so it must be turned into a URL search param object
+        data: new URLSearchParams( {
+            "grant_type":    "authorization_code",
+            "code":          code,
+            "redirect_uri":  REDIRECT_URI
+        }),
+    })
         .then(results => {
-            console.log(results); 
+            // Successful case
+            console.log(results.data);
+            res.send(results.data);
         })
         .catch(err => {
             // Handle errors
-            res.send(err);
+            console.log(err);
+            res.send('Error. Check console log');
         
         });
-  });
+});
 
 
 
 
 app.get('/login', (req, res) => {
+    console.log('/login route');
 
-    var state = "dfsgfdsgfdsgf";
+    // should be a random number. For our purposes, this should be fine
+    var state = "superrandomnumber";
     var scope = 'user-read-private user-read-email';
-    var redirect_uri = 'http://localhost:3000/callback';
 
     params = {
         response_type: 'code',
-        client_id: client_id,
+        client_id: CLIENT_ID,
         scope: scope,
-        redirect_uri: redirect_uri,
+        redirect_uri: REDIRECT_URI,
         state: state
     };
 
+    // redirecting to spotify authorize endpoint to get a verification code
     console.log('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
     res.redirect('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
     
