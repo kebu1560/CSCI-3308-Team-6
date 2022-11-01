@@ -125,22 +125,17 @@ app.get('/login', (req, res) => {
 });
 
 
-app.get('/search', (req, res) =>{
-    console.log('/search route');
+app.get('/me', (req, res) =>{
+    console.log('/me route');
 
-    const searchUrl = 'https://api.spotify.com/v1/search'
+    const meUrl = 'https://api.spotify.com/v1/me'
 
     axios({
-        url: searchUrl,
+        url: meUrl,
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + access_token
-        },
-        // josn data
-        data:  {
-            "q": "joy"
-        },
+        }
     })
     .then(results => {
         // Successful case
