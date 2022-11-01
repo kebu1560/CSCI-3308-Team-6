@@ -124,7 +124,7 @@ app.get('/login', (req, res) => {
     
 });
 
-
+// Route to get current user's data. Verifies authentication works
 app.get('/me', (req, res) =>{
     console.log('/me route');
 
