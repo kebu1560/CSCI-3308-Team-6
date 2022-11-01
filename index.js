@@ -187,33 +187,35 @@ app.get('/me', (req, res) =>{
 
 
 // Route to search for items in Spotify (search for songs, playlists, etc)
-app.get('/search', (req, res) =>{
+// Expects a string searchQuery for the string to serach and type, a list of types of results
+app.get('/search', async (req, res) =>{
     console.log('/search route');
+    const q = req.query.q;
+    const type = req.query.type;
 
-    const searchUrl = 'https://api.spotify.com/v1/search'
+    const searchUrl = 'https://api.spotify.com/v1/search?q=' + q + '&type=' + type;
+    console.log('Search URL: ', searchUrl);
 
-    axios({
-        url: searchUrl + "?q=joy?type=artist",
+    await axios({
+        url: searchUrl,
         method: 'GET',
         headers: {
             // 'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + access_token
-        },
-        // data: new URLSearchParams({
-        //     "q": 'joy',
-        //     "type": 'artist'
-        // })
+        }
     })
     .then(results => {
         // Successful case
         console.log(results.data);
-        res.send(results.data);
+        
+        res.send(results.data.artists.items[0]);
     })
     .catch(err => {
         // Handle errors
         console.log(err);
         res.send('Error. Check console log');
     });
+
 });
 
 // Route to get artist 
