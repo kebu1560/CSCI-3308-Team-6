@@ -61,6 +61,9 @@ app.get('/', (req, res) =>{
     res.send('home');
 });
 
+
+// Necessary callback route for SPotify API authentication
+// SHould not be called directly by client
 app.get('/callback', async (req, res) => {
     console.log('/callback route');
 
@@ -98,8 +101,8 @@ app.get('/callback', async (req, res) => {
 });
 
 
-
-
+// ROute to log in to SPotify
+// Will likely be modified to fit into our own login endpoint
 app.get('/login', (req, res) => {
     console.log('/login route');
 
