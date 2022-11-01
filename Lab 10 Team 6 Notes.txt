@@ -1,0 +1,90 @@
+﻿1. Team Number
+6
+
+
+2. Team Name
+UniSpot Team
+
+
+3. Team Members (6)
+* Baxter Romero
+   * baro3776@colorado.edu
+   * baxterromero44
+* Blake Hamilton
+* Joanna Parker
+   * jopa2386@colorado.edu
+   * Joanna1101
+* Kevin Buhler
+   * kebu1560@colorado.edu
+   * kebu1560
+* Shuchi Shah
+   * shsh7150@colorado.edu
+   * Shuchi18
+* Tristan Hunt
+   * trhu8216@colorado.edu
+   * Github: triszlers
+
+
+4. Application Name
+UniSpot
+
+
+5. Application Description
+
+
+UniSpot is a new way to connect with your university! Create a student account with just your city and school to see your university’s favorite songs, artists, and albums. Once you have created an account, you can add your Spotify playlists, songs, albums, or artists that you are listening to. Alternatively, you can create an artist account to see which university is your biggest fan, which will help you target the best places to tour! 
+
+
+UniSpot is a free crowdsourced application: once a student registers, they can add their Spotify playlists or songs, artists, or albums they are listening to. We first present users with a stats page showing trends in music genre for their university over the semester. In addition to general trends, users can select a specific genre to see its popularity in particular. We then present three pages specific to their university: top songs, top artists, top albums, and genre trends. On these “top” pages, users can “like” songs to increase their popularity and say that they, too, are listening to that music. Additionally, we present a ‘discover new’ page where users can see the favorite music from a different university. 
+
+
+Verified artists on Spotify can create an account on UniSpot to get a ranked list of universities that listen to their music and get data about favorite songs, albums, etc.. They can select a university to see its music preferences.  From the data we will gather from the students, we can provide artists with that valuable data so that they can see where they can make the most money on concerts. Live concerts in the United States is a 52 billion dollar/year industry, so artists and record labels would love to get geographic data about where they can target listeners for concerts. This would likely be the primary revenue stream for our app.
+
+
+6. Vision Statement
+Option 1: For curious university students who want to see their university's top songs. UniSpot is a Spotify enhancement that highlights popular songs within your university. Unlike Spotify's current friend activity, our product makes it an ease to see what your entire university is listening to.
+Option 2: Bring University students closer through the culture of music.
+
+
+Option 3: For students and artists who want to engage their musical community. UniSpot is a crowdsourced Spotify enhancement that highlights a university’s favorite songs, artists, and genres. UniSpot analysis runs deeper than Spotify’s current friend activity: at the click of a button, you are connected the trends and likes of your whole student body’s musical experience within an easy to navigate and beautifully presented website. 
+
+
+
+
+7. Version Control
+Github Link
+* https://github.com/kebu1560/unispot
+
+
+8. Development Methodology
+Agile Methodology
+GitHub project board
+
+
+9. Communication Plan
+We will use an iMessage Group Chat to communicate and Google Drive to share documents/files.
+
+
+10. Meeting Plan
+
+
+Team Meeting
+Team Stand-up Call
+* 5:15 - 5:30 pm
+* Tuesdays:
+   * Nov 1
+   * Nov 8
+   * Nov 15
+   * Nov 29
+
+
+11. Use Case Diagram
+  
+
+
+
+12. Wireframes
+Figma Link
+* https://www.figma.com/file/QoHkOP9RvI7dvbJYK0Hg1b/Untitled?node-id=1%3A2825
+*   ________________
+   *
