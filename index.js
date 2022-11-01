@@ -101,7 +101,43 @@ app.get('/callback', async (req, res) => {
 });
 
 
-// ROute to log in to SPotify
+// Refresh token route for SPotify API authentication
+app.get('/refresh_token', async (req, res) => {
+    console.log('/refresh route');
+
+    console.log(refresh_token);
+
+    const refreshUrl = 'https://accounts.spotify.com/api/token'
+
+    axios({
+        url: refreshUrl,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            // From Spotify documentation
+            'Authorization': 'Basic ' + (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
+        },
+        // data must be x-www-urlform-encoded, so it must be turned into a URL search param object
+        data: new URLSearchParams( {
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token
+        }),
+    })
+    .then(results => {
+        // Successful case
+        console.log(results.data);
+        access_token = results.data.access_token;
+        refresh_token = results.data.refresh_token;
+        res.send(results.data);
+    })
+    .catch(err => {
+        // Handle errors
+        console.log(err);
+        res.send('Error. Check console log');
+    });
+});
+
+// Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
 app.get('/login', (req, res) => {
     console.log('/login route');
@@ -134,6 +170,63 @@ app.get('/me', (req, res) =>{
         url: meUrl,
         method: 'GET',
         headers: {
+            'Authorization': 'Bearer ' + access_token
+        }
+    })
+    .then(results => {
+        // Successful case
+        console.log(results.data);
+        res.send(results.data);
+    })
+    .catch(err => {
+        // Handle errors
+        console.log(err);
+        res.send('Error. Check console log');
+    });
+});
+
+
+// Route to search for items in Spotify (search for songs, playlists, etc)
+app.get('/search', (req, res) =>{
+    console.log('/search route');
+
+    const searchUrl = 'https://api.spotify.com/v1/search'
+
+    axios({
+        url: searchUrl + "?q=joy?type=artist",
+        method: 'GET',
+        headers: {
+            // 'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token
+        },
+        // data: new URLSearchParams({
+        //     "q": 'joy',
+        //     "type": 'artist'
+        // })
+    })
+    .then(results => {
+        // Successful case
+        console.log(results.data);
+        res.send(results.data);
+    })
+    .catch(err => {
+        // Handle errors
+        console.log(err);
+        res.send('Error. Check console log');
+    });
+});
+
+// Route to get artist 
+app.get('/artists', (req, res) =>{
+    console.log('/artists route');
+
+    const searchUrl = 'https://api.spotify.com/v1/artists/' + 'taylor+swift';
+
+    axios({
+        url: searchUrl,
+        method: 'GET',
+        headers: {
+            // 'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + access_token
         }
     })
