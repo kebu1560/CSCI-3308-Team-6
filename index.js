@@ -218,31 +218,6 @@ app.get('/search', async (req, res) =>{
 
 });
 
-// Route to get artist 
-app.get('/artists', (req, res) =>{
-    console.log('/artists route');
-
-    const searchUrl = 'https://api.spotify.com/v1/artists/' + 'taylor+swift';
-
-    axios({
-        url: searchUrl,
-        method: 'GET',
-        headers: {
-            // 'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
-        }
-    })
-    .then(results => {
-        // Successful case
-        console.log(results.data);
-        res.send(results.data);
-    })
-    .catch(err => {
-        // Handle errors
-        console.log(err);
-        res.send('Error. Check console log');
-    });
-});
 
 // 9 
 // Authentication Middleware.
