@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
-var querystring = require('querystring');
 const { URLSearchParams } = require('url');
 
 // database configuration
@@ -52,9 +51,9 @@ app.use(
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
+var access_token = '';
+var refresh_token = '';
 
-var client_code = '';
-var state = 'fdsgfdsgrwv';
 
 app.get('/', (req, res) =>{
     console.log('/ route');
@@ -87,17 +86,18 @@ app.get('/callback', async (req, res) => {
             "redirect_uri":  REDIRECT_URI
         }),
     })
-        .then(results => {
-            // Successful case
-            console.log(results.data);
-            res.send(results.data);
-        })
-        .catch(err => {
-            // Handle errors
-            console.log(err);
-            res.send('Error. Check console log');
-        
-        });
+    .then(results => {
+        // Successful case
+        console.log(results.data);
+        access_token = results.data.access_token;
+        refresh_token = results.data.refresh_token;
+        res.send(results.data);
+    })
+    .catch(err => {
+        // Handle errors
+        console.log(err);
+        res.send('Error. Check console log');
+    });
 });
 
 
@@ -125,7 +125,34 @@ app.get('/login', (req, res) => {
 });
 
 
+app.get('/search', (req, res) =>{
+    console.log('/search route');
 
+    const searchUrl = 'https://api.spotify.com/v1/search'
+
+    axios({
+        url: searchUrl,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token
+        },
+        // josn data
+        data:  {
+            "q": "joy"
+        },
+    })
+    .then(results => {
+        // Successful case
+        console.log(results.data);
+        res.send(results.data);
+    })
+    .catch(err => {
+        // Handle errors
+        console.log(err);
+        res.send('Error. Check console log');
+    });
+});
 
 // 9 
 // Authentication Middleware.
