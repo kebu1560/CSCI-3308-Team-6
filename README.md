@@ -8,6 +8,13 @@ UniSpot is a new way to connect with your university! Create a student account w
 
 # Contributors
 
+- Baxter Romero
+- Blake Hamilton
+- Joanna Parker
+- Kevin Buhler
+- Shuchi Shah
+- Tristan Hunt
+
 # Technology Stack used for the project
 
 - Node.js
