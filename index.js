@@ -219,6 +219,32 @@ app.get('/search', async (req, res) =>{
 });
 
 
+app.get('/shazam', async (req, res) =>{
+    console.log('/search route');
+    const term = req.query.term;
+
+    const axios = require("axios");
+
+    const options = {
+        method: 'GET',
+        url: 'https://shazam.p.rapidapi.com/search',
+        params: {term: term, locale: 'en-US', offset: '0', limit: '5'},
+        headers: {
+        'X-RapidAPI-Key': '5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771',
+        'X-RapidAPI-Host': 'shazam.p.rapidapi.com'
+        }
+    };
+
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+        res.send(response.data);
+    }).catch(function (error) {
+        console.error(error);
+    }); 
+
+});
+
+
 // 9 
 // Authentication Middleware.
 // const auth = (req, res, next) => {
