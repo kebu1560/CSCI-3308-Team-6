@@ -1,0 +1,33 @@
+﻿Meeting 1 Notes
+
+
+What have you done since the last meeting?
+* Worked with Spotify API to figure out what is feasible in terms of authentication
+* Come up with basic website structure, reflected in directory structure
+* Set up git repository and project board
+* Started index.js
+
+
+What are you planning to do until the next meeting?
+* From lab 10:
+   * Fix project board formatting:
+      * One issue for each page
+      * Checkboxes for API, front end, javascript, css, session management, etc.
+      * Can link checkboxes to different issues
+      * Change story points accordingly
+   * Make sure lab 10 notes doc is up to date and pushed to git
+   * Update wireframes for each page and push them
+* For lab 11:
+   * Look into other APIs that don’t require developer accounts (soundcloud, youtube music, shazam?)
+   * Potentially rethink the scope of the project: develop the application with one person’s amount of data, and make it dynamic at the end if we have time
+      * We only make one call to the API
+   * Make sure we know what our data is going to look like 
+      * Possibly make a database diagram like we did in the SQL lab?
+   * Ideas about solving the spotify API issues:
+      * Hardcode our stuff into the spotify api so that users can see trends without logging in through spotify
+      * Generate a token every hour and save it into a database
+      * Save the data we gather locally so the project can be viewed by people in the future. (ie, if we want to add this to our personal githubs, someone should be able to see and interact with the project).
+
+
+What are the challenges you are facing?
+* Spotify’s API has authentication issues: we can’t make an API request unless logged in through a developer account. That means that any random user can’t search for songs using their personal account. It also makes it difficult to obtain dummy data for development purposes.
