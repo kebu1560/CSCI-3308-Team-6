@@ -42,11 +42,8 @@ Verified artists on Spotify can create an account on UniSpot to get a ranked lis
 
 
 6. Vision Statement
-Option 1: For curious university students who want to see their university's top songs. UniSpot is a Spotify enhancement that highlights popular songs within your university. Unlike Spotify's current friend activity, our product makes it an ease to see what your entire university is listening to.
 Option 2: Bring University students closer through the culture of music.
 
-
-Option 3: For students and artists who want to engage their musical community. UniSpot is a crowdsourced Spotify enhancement that highlights a university’s favorite songs, artists, and genres. UniSpot analysis runs deeper than Spotify’s current friend activity: at the click of a button, you are connected the trends and likes of your whole student body’s musical experience within an easy to navigate and beautifully presented website. 
 
 
 
