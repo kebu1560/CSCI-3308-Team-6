@@ -180,12 +180,18 @@ app.get('/search_song', async (req, res) =>{
 
     axios.request(options).then(function (response) {
         console.log(response.data);
-        //Checking to make sure there are results being sent backg an object to send back to client
+        // FInding number of songs found
+        num_results = Object.keys(response.data).length;
+        //Checking to make sure there are results being sent back
+        if (num_results == 0){
+            res.send('No results');
+        }
+        //Creating an object to send back to client
         params = {
             tracks: []
         };
         // Iterating through each song and adding it to our respons JSON
-        for (let i = 0; i < limit; i++){
+        for (let i = 0; i < num_results; i++){
             const title = response.data.tracks.hits[0].track.title
             const key = response.data.tracks.hits[0].track.key
             const imageLink = response.data.tracks.hits[0].track.images.coverart
