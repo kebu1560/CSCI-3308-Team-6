@@ -207,6 +207,25 @@ app.get('/search_song', async (req, res) =>{
 
 });
 
+app.post('/login', async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const match = await bcrypt.compare(req.body.password, user.password); //await is explained in #8
+    const query = 'select * from users where users.username = $1';
+    const values = [users];
+    // get the username based on the users table using query
+    db.one(query, values)
+        .then(data => {
+            if (username == data.username && match) {
+                req.session.user = {
+                    api_key: process.env.API_KEY,
+                };
+                req.session.save();
+                res.redirect('/'); //need redirect location, also need error catch condition
+            };
+        });
+    });
+
 
 // 9 
 // Authentication Middleware.
