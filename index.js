@@ -56,9 +56,72 @@ var access_token = '';
 var refresh_token = '';
 
 
-app.get('/', (req, res) =>{
-    console.log('/ route');
-    res.send('home');
+app.get("/", (req, res) => {
+  // console.log("/ route");
+  // res.send('home');
+  res.render("pages/index"); // index is the first/welcome page for the / route
+});
+
+app.get("/home", (req, res) => {
+  // console.log("/ route");
+  // res.send('home');
+  res.render("pages/home");
+});
+
+app.get("/login", (req, res) => {
+  // console.log("/login");
+  // res.send('home');
+  res.render("pages/login");
+});
+
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const query = `SELECT * FROM users2 WHERE username = '${username}';`;
+  // console.log("req body", req.body);
+
+  db.any(query)
+    .then(async (data) => {
+      if (data.length > 0) {
+        // console.log("data@", data[0]);
+        const match = await bcrypt.compare(req.body.password, data[0].password); //await is explained in #8
+
+        if (!match) {
+          return console.log("Incorrect username or password.");
+        } else {
+          req.session.user = {
+            api_key: process.env.API_KEY,
+          };
+          req.session.save();
+          res.redirect("/discover");
+        }
+      } else {
+        res.redirect("/register");
+      }
+    })
+    .catch(function (err) {
+      console.log("Error in logging in,", err);
+      res.render("pages/login");
+    });
+});
+
+app.get("/register", (req, res) => {
+  // console.log("/login");
+  // res.send('home');
+  res.render("pages/register");
+});
+
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  const query = `INSERT INTO users2 (username, password) VALUES ('${username}','${hash}');`;
+  db.any(query)
+    .then((data) => {
+      res.redirect("/login");
+    })
+    .catch(function (err) {
+      res.redirect("/register");
+    });
 });
 
 
@@ -140,25 +203,32 @@ app.get('/refresh_token', async (req, res) => {
 
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
-app.get('/login', (req, res) => {
-    console.log('/login route');
 
-    // should be a random number. For our purposes, this should be fine
-    var state = "superrandomnumber";
-    var scope = 'user-read-private user-read-email';
+app.get("/login2", (req, res) => {
+  console.log("/login route");
 
-    params = {
-        response_type: 'code',
-        client_id: CLIENT_ID,
-        scope: scope,
-        redirect_uri: REDIRECT_URI,
-        state: state
-    };
+  // should be a random number. For our purposes, this should be fine
+  var state = "superrandomnumber";
+  var scope = "user-read-private user-read-email";
 
-    // redirecting to spotify authorize endpoint to get a verification code
-    console.log('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
-    res.redirect('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
-    
+  params = {
+    response_type: "code",
+    client_id: CLIENT_ID,
+    scope: scope,
+    redirect_uri: REDIRECT_URI,
+    state: state,
+  };
+
+  // redirecting to spotify authorize endpoint to get a verification code
+  console.log(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams(params).toString()
+  );
+  res.redirect(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams(params).toString()
+  );
+
 });
 
 
