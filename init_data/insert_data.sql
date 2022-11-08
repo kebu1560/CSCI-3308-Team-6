@@ -1,0 +1,1 @@
+INSERT INTO songs (title, key, imageLink, artist) VALUES ('Yellow Submarine', 12345, 'www.image.com', 'The Beatles');

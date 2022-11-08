@@ -268,7 +268,7 @@ app.get('/search_song', async (req, res) =>{
             const artist = response.data.tracks.hits[0].track.subtitle
             params['tracks'].push({'title': title, 'key': key, 'artist': artist, 'imageLink': imageLink});
         }
-        console.log(params);
+        console.log('params', params);
         res.send(params);
     }).catch(function (error) {
         console.error(error);
@@ -276,6 +276,26 @@ app.get('/search_song', async (req, res) =>{
     }); 
 
 });
+
+
+// Route to get song data stored in our database
+app.get("/get_song", (req, res) => {
+  console.log('get_song route');
+
+  const query = 'SELECT * FROM songs;';
+    values = [req.body];
+    db.one(query, values)
+    .then(async data => {
+        console.log('data is', data);
+
+        res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send('error');
+    });
+});
+
 
 
 // 9 

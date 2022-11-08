@@ -1,1 +1,0 @@
-CREATE TABLE users (spotify_username VARCHAR(50) PRIMARY KEY, spotify_password CHAR(60) NOT NULL, location CHAR(60) NOT NULL);
