@@ -6,6 +6,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 const { URLSearchParams } = require('url');
+const { resolveNaptr } = require('dns');
 
 // database configuration
 const dbConfig = {
@@ -55,9 +56,72 @@ var access_token = '';
 var refresh_token = '';
 
 
-app.get('/', (req, res) =>{
-    console.log('/ route');
-    res.send('home');
+app.get("/", (req, res) => {
+  // console.log("/ route");
+  // res.send('home');
+  res.render("pages/index"); // index is the first/welcome page for the / route
+});
+
+app.get("/home", (req, res) => {
+  // console.log("/ route");
+  // res.send('home');
+  res.render("pages/home");
+});
+
+app.get("/login", (req, res) => {
+  // console.log("/login");
+  // res.send('home');
+  res.render("pages/login");
+});
+
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const query = `SELECT * FROM users2 WHERE username = '${username}';`;
+  // console.log("req body", req.body);
+
+  db.any(query)
+    .then(async (data) => {
+      if (data.length > 0) {
+        // console.log("data@", data[0]);
+        const match = await bcrypt.compare(req.body.password, data[0].password); //await is explained in #8
+
+        if (!match) {
+          return console.log("Incorrect username or password.");
+        } else {
+          req.session.user = {
+            api_key: process.env.API_KEY,
+          };
+          req.session.save();
+          res.redirect("/discover");
+        }
+      } else {
+        res.redirect("/register");
+      }
+    })
+    .catch(function (err) {
+      console.log("Error in logging in,", err);
+      res.render("pages/login");
+    });
+});
+
+app.get("/register", (req, res) => {
+  // console.log("/login");
+  // res.send('home');
+  res.render("pages/register");
+});
+
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  const query = `INSERT INTO users2 (username, password) VALUES ('${username}','${hash}');`;
+  db.any(query)
+    .then((data) => {
+      res.redirect("/login");
+    })
+    .catch(function (err) {
+      res.redirect("/register");
+    });
 });
 
 
@@ -139,82 +203,77 @@ app.get('/refresh_token', async (req, res) => {
 
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
-app.get('/login', (req, res) => {
-    console.log('/login route');
 
-    // should be a random number. For our purposes, this should be fine
-    var state = "superrandomnumber";
-    var scope = 'user-read-private user-read-email';
+app.get("/login2", (req, res) => {
+  console.log("/login route");
 
-    params = {
-        response_type: 'code',
-        client_id: CLIENT_ID,
-        scope: scope,
-        redirect_uri: REDIRECT_URI,
-        state: state
-    };
+  // should be a random number. For our purposes, this should be fine
+  var state = "superrandomnumber";
+  var scope = "user-read-private user-read-email";
 
-    // redirecting to spotify authorize endpoint to get a verification code
-    console.log('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
-    res.redirect('https://accounts.spotify.com/authorize?' + new URLSearchParams(params).toString());
-    
-});
+  params = {
+    response_type: "code",
+    client_id: CLIENT_ID,
+    scope: scope,
+    redirect_uri: REDIRECT_URI,
+    state: state,
+  };
 
-// Route to get current user's data. Verifies authentication works
-app.get('/me', (req, res) =>{
-    console.log('/me route');
+  // redirecting to spotify authorize endpoint to get a verification code
+  console.log(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams(params).toString()
+  );
+  res.redirect(
+    "https://accounts.spotify.com/authorize?" +
+      new URLSearchParams(params).toString()
+  );
 
-    const meUrl = 'https://api.spotify.com/v1/me'
-
-    axios({
-        url: meUrl,
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + access_token
-        }
-    })
-    .then(results => {
-        // Successful case
-        console.log(results.data);
-        res.send(results.data);
-    })
-    .catch(err => {
-        // Handle errors
-        console.log(err);
-        res.send('Error. Check console log');
-    });
 });
 
 
-// Route to search for items in Spotify (search for songs, playlists, etc)
-// Expects a string searchQuery for the string to serach and type, a list of types of results
-app.get('/search', async (req, res) =>{
+app.get('/search_song', async (req, res) =>{
     console.log('/search route');
     const q = req.query.q;
-    const type = req.query.type;
+    //limiting the number of results
+    limit = 10
 
-    const searchUrl = 'https://api.spotify.com/v1/search?q=' + q + '&type=' + type;
-    console.log('Search URL: ', searchUrl);
-
-    await axios({
-        url: searchUrl,
+    const options = {
         method: 'GET',
+        url: 'https://shazam.p.rapidapi.com/search',
+        params: {term: q, locale: 'en-US', offset: '0', limit: limit},
         headers: {
-            // 'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
+        'X-RapidAPI-Key': '5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771',
+        'X-RapidAPI-Host': 'shazam.p.rapidapi.com'
         }
-    })
-    .then(results => {
-        // Successful case
-        console.log(results.data);
-        
-        res.send(results.data.artists.items[0]);
-    })
-    .catch(err => {
-        // Handle errors
-        console.log(err);
-        res.send('Error. Check console log');
-    });
+    };
+
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+        // FInding number of songs found
+        num_results = Object.keys(response.data).length;
+        //Checking to make sure there are results being sent back
+        if (num_results == 0){
+            res.send('No results');
+        }
+        //Creating an object to send back to client
+        params = {
+            tracks: []
+        };
+        // Iterating through each song and adding it to our respons JSON
+        for (let i = 0; i < num_results; i++){
+            const title = response.data.tracks.hits[0].track.title
+            const key = response.data.tracks.hits[0].track.key
+            const imageLink = response.data.tracks.hits[0].track.images.coverart
+            const artist = response.data.tracks.hits[0].track.subtitle
+            params['tracks'].push({'title': title, 'key': key, 'artist': artist, 'imageLink': imageLink});
+        }
+        console.log(params);
+        res.send(params);
+    }).catch(function (error) {
+        console.error(error);
+        res.send(error.message);
+    }); 
 
 });
 
