@@ -263,10 +263,10 @@ app.get('/search_song', async (req, res) =>{
         // Iterating through each song and adding it to our respons JSON
         for (let i = 0; i < num_results; i++){
             const title = response.data.tracks.hits[0].track.title
-            const key = response.data.tracks.hits[0].track.key
+            const songId = response.data.tracks.hits[0].track.key
             const imageLink = response.data.tracks.hits[0].track.images.coverart
             const artist = response.data.tracks.hits[0].track.subtitle
-            params['tracks'].push({'title': title, 'key': key, 'artist': artist, 'imageLink': imageLink});
+            params['tracks'].push({'title': title, 'SongId': songId, 'artist': artist, 'imageLink': imageLink});
         }
         console.log('params', params);
         res.send(params);
@@ -303,8 +303,8 @@ app.get("/songs_db", (req, res) => {
     values = [req.body];
     db.any(query, values)
     .then(async data => {
-        console.log('data is', data);
-        res.send(data);
+      console.log('data is', data);
+      res.send(data);
     })
     .catch(err => {
       console.log(err);
@@ -312,15 +312,24 @@ app.get("/songs_db", (req, res) => {
     });
 });
 
+//Route to add a song to the database
+// Must send all data necessary to the route in body
 app.get("/add_song", async (req, res) => {
   console.log('add_song route');
 
-  const query = 'INSERT INTO songs (title, key, imageLink, artist) VALUES ($1, $2, $3, $4);';
-  values = ['Deja Vu', 12222, 'dferiferjiofr', 'J. Cole'];
+  //Creating a var Date to load into the db
+  let currentDate = new Date();
+  currentDate.toISOString().split('T')[0]
+
+  values = [req.query.title, req.query.key, req.query.imageLink, req.query.artist, currentDate];
+
+  const query = 'INSERT INTO songs (title, song_id, image_link, artist) VALUES ($1, $2, $3, $4);';
   // values = [req.body];
   await db.query(query, values);
   res.send('Added song to db');
 });
+
+
 
 
 // 9 
