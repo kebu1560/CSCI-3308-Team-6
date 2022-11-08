@@ -1,7 +1,7 @@
 CREATE TABLE songs (
     song_id SERIAL PRIMARY KEY NOT NULL, 
     title VARCHAR(100) NOT NULL,
-    imageLink VARCHAR(300),
+    image_Link VARCHAR(300),
     artist VARCHAR(100)
 );
 
