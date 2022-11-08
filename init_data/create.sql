@@ -1,12 +1,16 @@
-CREATE TABLE music (
+CREATE TABLE songs (
     song_id SERIAL PRIMARY KEY NOT NULL, 
-    song_name VARCHAR(100) NOT NULL 
+    title VARCHAR(100) NOT NULL,
+    imageLink VARCHAR(300),
+    artist VARCHAR(100)
 );
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY NOT NULL, 
     username VARCHAR(50) NOT NULL, 
-    password CHAR(50) NOT NULL
+    password CHAR(50) NOT NULL,
+    transaction_id SERIAL PRIMARY KEY,
+    load_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE univerisities (
