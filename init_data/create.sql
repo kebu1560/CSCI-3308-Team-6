@@ -3,7 +3,7 @@ CREATE TABLE users (username VARCHAR(50) PRIMARY KEY, password CHAR(60) NOT NULL
 CREATE TABLE songs (
     title VARCHAR(100),
     song_id INT PRIMARY KEY,
-    imageLink VARCHAR(300),
+    image_linkink VARCHAR(300),
     artist VARCHAR(100)
 );
 
