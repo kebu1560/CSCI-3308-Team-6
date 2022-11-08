@@ -74,6 +74,10 @@ app.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
+app.get("/data_trends", (req, res) => {
+  res.render("pages/data_trends");
+});
+
 app.post("/login", async (req, res) => {
   const username = req.body.username;
   const query = `SELECT * FROM users2 WHERE username = '${username}';`;
