@@ -278,7 +278,7 @@ app.get('/search_song', async (req, res) =>{
 });
 
 
-// Route to get song data stored in our database
+// Route to get single song data stored in our database
 app.get("/get_song", (req, res) => {
   console.log('get_song route');
 
@@ -286,8 +286,24 @@ app.get("/get_song", (req, res) => {
     values = [req.body];
     db.one(query, values)
     .then(async data => {
-        console.log('data is', data);
+      console.log('data is', data);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send('error');
+    });
+});
 
+//Route to view songs database
+app.get("/songs_db", (req, res) => {
+  console.log('get_song route');
+
+  const query = 'SELECT * FROM songs;';
+    values = [req.body];
+    db.any(query, values)
+    .then(async data => {
+        console.log('data is', data);
         res.send(data);
     })
     .catch(err => {
@@ -296,6 +312,15 @@ app.get("/get_song", (req, res) => {
     });
 });
 
+app.get("/add_song", async (req, res) => {
+  console.log('add_song route');
+
+  const query = 'INSERT INTO songs (title, key, imageLink, artist) VALUES ($1, $2, $3, $4);';
+  values = ['Deja Vu', 12222, 'dferiferjiofr', 'J. Cole'];
+  // values = [req.body];
+  await db.query(query, values);
+  res.send('Added song to db');
+});
 
 
 // 9 
