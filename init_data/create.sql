@@ -18,8 +18,8 @@ CREATE TABLE univerisities (
     university_name VARCHAR(200) NOT NULL
 );
 
-CREATE TABLE music_to_users (
-    FOREIGN KEY (song_id) REFERENCES music(song_id),
+CREATE TABLE songs_to_users (
+    FOREIGN KEY (song_id) REFERENCES song(song_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)    
 );
 
