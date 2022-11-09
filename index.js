@@ -72,14 +72,18 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
   const username = req.body.username;
-  const query = `SELECT * FROM users2 WHERE username = '${username}';`;
-  // console.log("req body", req.body);
+  const query = `SELECT * FROM users WHERE spotify_username = '${username}';`;
+  console.log("attempting to login");
 
   db.any(query)
     .then(async (data) => {
+      console.log("@@@@", data);
       if (data.length > 0) {
         // console.log("data@", data[0]);
-        const match = await bcrypt.compare(req.body.password, data[0].password); //await is explained in #8
+        const match = await bcrypt.compare(
+          data[0].spotify_username,
+          data[0].spotify_password
+        ); //await is explained in #8
 
         if (!match) {
           return console.log("Incorrect username or password.");
@@ -88,10 +92,10 @@ app.post("/login", async (req, res) => {
             api_key: process.env.API_KEY,
           };
           req.session.save();
-          res.redirect("/discover");
+          res.redirect("/home");
         }
       } else {
-        res.redirect("/register");
+        res.redirect("/login");
       }
     })
     .catch(function (err) {
@@ -110,14 +114,22 @@ app.post("/register", async (req, res) => {
   const username = req.body.username;
   const hash = await bcrypt.hash(req.body.password, 10);
 
-  const query = `INSERT INTO users2 (username, password) VALUES ('${username}','${hash}');`;
+  const query = `INSERT INTO users (spotify_username, spotify_password, location) VALUES ('${username}','${hash}','Boulder');`;
   db.any(query)
     .then((data) => {
       res.redirect("/login");
     })
     .catch(function (err) {
       res.redirect("/register");
+    })
+    .catch(function (err) {
+      console.log("Error in logging in,", err);
     });
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
 });
 
 // Necessary callback route for SPotify API authentication
@@ -286,17 +298,17 @@ app.get("/search", async (req, res) => {
 
 // 9
 // Authentication Middleware.
-// const auth = (req, res, next) => {
-//     console.log(req.session);
-//     if (!req.session.user) {
-//       // Default to register page.
-//       return res.render('pages/register');
-//     }
-//     next();
-//   };
+const auth = (req, res, next) => {
+  console.log(req.session);
+  if (!req.session.user) {
+    // Default to register page.
+    return res.render("pages/register");
+  }
+  next();
+};
 
 // Authentication Required
-// app.use(auth);
+app.use(auth);
 
 app.listen(3000);
 console.log("Server is listening on port 3000");
