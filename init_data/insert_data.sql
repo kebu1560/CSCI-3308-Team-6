@@ -1,1 +1,1 @@
-INSERT INTO songs (title, song_id, imageLink, artist) VALUES ('Yellow Submarine', 12345, 'www.image.com', 'The Beatles');
+INSERT INTO songs (song_id, title, image_link, artist) VALUES (123, 'Yellow Submarine', 'www.image.com', 'The Beatles');

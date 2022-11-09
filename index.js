@@ -321,9 +321,9 @@ app.get("/add_song", async (req, res) => {
   let currentDate = new Date();
   currentDate.toISOString().split('T')[0]
 
-  values = [req.query.title, req.query.key, req.query.imageLink, req.query.artist, currentDate];
-
-  const query = 'INSERT INTO songs (title, song_id, image_link, artist) VALUES ($1, $2, $3, $4);';
+  values = [req.query.song_id, req.query.title, req.query.image_link, req.query.artist];
+  console.log(values);
+  const query = 'INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);';
   // values = [req.body];
   await db.query(query, values);
   res.send('Added song to db');

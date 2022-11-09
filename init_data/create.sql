@@ -1,7 +1,7 @@
 CREATE TABLE songs (
-    song_id SERIAL PRIMARY KEY NOT NULL, 
+    song_id INT PRIMARY KEY NOT NULL, 
     title VARCHAR(100) NOT NULL,
-    image_Link VARCHAR(300),
+    image_link VARCHAR(300),
     artist VARCHAR(100)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE transactions (
     transaction_id SERIAL PRIMARY KEY,
     song_id INT,
     load_date DATE NOT NULL DEFAULT CURRENT_DATE
-)
+);
 
 CREATE TABLE univerisities (
     university_id SERIAL PRIMARY KEY NOT NULL,
@@ -23,11 +23,17 @@ CREATE TABLE univerisities (
 );
 
 CREATE TABLE songs_to_users (
-    FOREIGN KEY (song_id) REFERENCES song(song_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)    
+    song_id INT,
+    user_id INT,
+    CONSTRAINT fk_song_id
+        FOREIGN KEY (song_id) 
+            REFERENCES songs(song_id),
+    CONSTRAINT fk_user_id
+        FOREIGN KEY (user_id) 
+            REFERENCES users(user_id)    
 );
 
-CREATE TABLE universities_to_users (
-    FOREIGN KEY (university_id) REFERENCES universities(university_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
+-- CREATE TABLE universities_to_users (
+--     FOREIGN KEY (university_id) REFERENCES universities(university_id),
+--     FOREIGN KEY (user_id) REFERENCES users(user_id)
+-- );
