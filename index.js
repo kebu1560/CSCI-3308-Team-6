@@ -213,6 +213,7 @@ app.get("/refresh_token", async (req, res) => {
 
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
+
 app.get("/login2", (req, res) => {
   console.log("/login route");
 
