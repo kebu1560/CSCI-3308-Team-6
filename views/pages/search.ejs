@@ -5,7 +5,7 @@
   
   <div class="flex flex-col justify-center m-auto text-center mx-4">
     <div class="text-3xl my-8 font-semibold">Search Results:</div>
-    <div class="grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+    <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto">
       <!-- <div><%= params.tracks[0].title %></div> -->
       <!-- <div><%= params.tracks[0].artist %></div> -->
 
@@ -16,17 +16,12 @@
        <!-- console.log('444', result.dates.start) -->
        cards = '';
        params.tracks.forEach((result) => {
-        
         cards += '<div class="p-3 bg-stone-100 cursor-pointer rounded">';
         <!-- console.log('@@@@',result); -->
-
         cards += '<img class="" src="' + result.imageLink + '">';
         cards += '<div class="text-2xl font-semibold my-2">'+result.title+'</div>';
         cards += '<div class="mb-2">'+result.artist+'</div>';
-
         cards += '</div>';
-
-        
       })
 
       }; %> 
