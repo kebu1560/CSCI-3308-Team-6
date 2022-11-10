@@ -240,106 +240,118 @@ app.get("/login2", (req, res) => {
   );
 });
 
+app.get("/search_song", async (req, res) => {
+  const q = req.query.q;
+  //limiting the number of results
+  limit = 10;
 
-app.get('/search_song', async (req, res) =>{
-    console.log('/search route');
-    const q = req.query.q;
-    //limiting the number of results
-    limit = 10
+  const options = {
+    method: "GET",
+    url: "https://shazam.p.rapidapi.com/search",
+    params: { term: q, locale: "en-US", offset: "0", limit: limit },
+    headers: {
+      "X-RapidAPI-Key": "5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771",
+      "X-RapidAPI-Host": "shazam.p.rapidapi.com",
+    },
+  };
 
-    const options = {
-        method: 'GET',
-        url: 'https://shazam.p.rapidapi.com/search',
-        params: {term: q, locale: 'en-US', offset: '0', limit: limit},
-        headers: {
-        'X-RapidAPI-Key': '5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771',
-        'X-RapidAPI-Host': 'shazam.p.rapidapi.com'
-        }
-    };
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+      // FInding number of songs found
+      num_results = Object.keys(response.data).length;
+      //Checking to make sure there are results being sent back
+      if (num_results == 0) {
+        res.send("No results");
+      }
+      //Creating an object to send back to client
+      params = {
+        tracks: [],
+      };
+      // Iterating through each song and adding it to our respons JSON
+      for (let i = 0; i < num_results; i++) {
+        const title = response.data.tracks.hits[0].track.title;
+        const songId = response.data.tracks.hits[0].track.key;
+        const imageLink = response.data.tracks.hits[0].track.images.coverart;
+        const artist = response.data.tracks.hits[0].track.subtitle;
+        params["tracks"].push({
+          title: title,
+          SongId: songId,
+          artist: artist,
+          imageLink: imageLink,
+        });
+      }
+      console.log("params", params);
+      // res.send(params);
+      res.render("pages/search", params);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.send(error.message);
+    });
 
-    axios.request(options).then(function (response) {
-        console.log(response.data);
-        // FInding number of songs found
-        num_results = Object.keys(response.data).length;
-        //Checking to make sure there are results being sent back
-        if (num_results == 0){
-            res.send('No results');
-        }
-        //Creating an object to send back to client
-        params = {
-            tracks: []
-        };
-        // Iterating through each song and adding it to our respons JSON
-        for (let i = 0; i < num_results; i++){
-            const title = response.data.tracks.hits[0].track.title
-            const songId = response.data.tracks.hits[0].track.key
-            const imageLink = response.data.tracks.hits[0].track.images.coverart
-            const artist = response.data.tracks.hits[0].track.subtitle
-            params['tracks'].push({'title': title, 'SongId': songId, 'artist': artist, 'imageLink': imageLink});
-        }
-        console.log('params', params);
-        res.send(params);
-    }).catch(function (error) {
-        console.error(error);
-        res.send(error.message);
-    }); 
+  // console.log("/search route", params);
 });
 
 // Route to get single song data stored in our database
 app.get("/get_song", (req, res) => {
-  console.log('get_song route');
+  console.log("get_song route");
 
-  const query = 'SELECT * FROM songs;';
-    values = [req.body];
-    db.one(query, values)
-    .then(async data => {
-      console.log('data is', data);
+  const query = "SELECT * FROM songs;";
+  values = [req.body];
+  db.one(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
-      res.send('error');
+      res.send("error");
     });
 });
 
 //Route to view songs database
 app.get("/songs_db", (req, res) => {
-  console.log('get_song route');
+  console.log("get_song route");
 
-  const query = 'SELECT * FROM songs;';
-    values = [req.body];
-    db.any(query, values)
-    .then(async data => {
-      console.log('data is', data);
+  const query = "SELECT * FROM songs;";
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
-      res.send('error');
+      res.send("error");
     });
 });
 
 //Route to add a song to the database
 // Must send all data necessary to the route in body
 app.get("/add_song", async (req, res) => {
-  console.log('add_song route');
+  console.log("add_song route");
 
   //Creating a var Date to load into the db
   let currentDate = new Date();
-  currentDate.toISOString().split('T')[0]
+  currentDate.toISOString().split("T")[0];
 
-  values = [req.query.song_id, req.query.title, req.query.image_link, req.query.artist];
+  values = [
+    req.query.song_id,
+    req.query.title,
+    req.query.image_link,
+    req.query.artist,
+  ];
   console.log(values);
-  const query = 'INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);';
+  const query =
+    "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
   // values = [req.body];
   await db.query(query, values);
-  res.send('Added song to db');
+  res.send("Added song to db");
 });
 
-
-
-
-// 9 
+// 9
 // Authentication Middleware.
 const auth = (req, res, next) => {
   console.log(req.session);
