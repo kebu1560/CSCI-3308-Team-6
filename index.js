@@ -271,14 +271,14 @@ app.get('/search_song', async (req, res) =>{
         };
         // Iterating through each song and adding it to our respons JSON
         for (let i = 0; i < num_results; i++){
-            const title = response.data.tracks.hits[0].track.title
-            const songId = response.data.tracks.hits[0].track.key
-            const imageLink = response.data.tracks.hits[0].track.images.coverart
-            const artist = response.data.tracks.hits[0].track.subtitle
+            const title = response.data.tracks.hits[i].track.title
+            const songId = response.data.tracks.hits[i].track.key
+            const imageLink = response.data.tracks.hits[i].track.images.coverart
+            const artist = response.data.tracks.hits[i].track.subtitle
             params['tracks'].push({'title': title, 'SongId': songId, 'artist': artist, 'imageLink': imageLink});
         }
         console.log('params', params);
-        res.send(params);
+        res.send(response.data);
     }).catch(function (error) {
         console.error(error);
         res.send(error.message);
