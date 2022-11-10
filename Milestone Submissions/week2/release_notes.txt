@@ -1,9 +1,3 @@
-Meeting 2 Notes
-
-11/08/2022 4:00
-
-
-What have you done since the last meeting?
 * Pivoted from Spotify API to Rapid API in order to use the Shazam search_song call.
 * HTML and Javascript for Login/Register calls. Yet to finish setup for postgresSQL.
 * Fixed security leak - deleted .env file and added it to .gitignore with another version of the file stored locally to test put database.
@@ -13,14 +7,3 @@ What have you done since the last meeting?
 * Create statement for tables needed.
 * Insert.sql file works
 * Route to view tables in database works.
-
-What are you planning to do until the next meeting?
-* Finalize and fill in Database
-* Establish a connection between the user interface and the backend
-* Create trend page for Songs.ejs - from there once we have working functionality it will be easy to create the Artist and other pages.
-* Create artist page with more artist information 
-
-What are the challenges you are facing?
-* Creating ideal database structure
-* Working with/around Shazam API
-* Create functional Data Trend Graphs
