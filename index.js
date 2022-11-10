@@ -259,9 +259,9 @@ app.get("/search_song", async (req, res) => {
     .request(options)
     .then(function (response) {
       // FInding number of songs found
-      num_results = Object.keys(response.data).length;
+      num_results = response.data.tracks.hits.length;
 
-      console.log("$$$", response);
+      console.log("$$$", response.data);
       //Checking to make sure there are results being sent back
       if (num_results == 0) {
         res.send("No search results ");
