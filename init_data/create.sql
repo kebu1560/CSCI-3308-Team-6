@@ -7,8 +7,8 @@ CREATE TABLE songs (
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY NOT NULL, 
-    username VARCHAR(50) NOT NULL, 
-    password CHAR(50) NOT NULL
+    spotify_username VARCHAR(50) NOT NULL, 
+    spotify_password CHAR(50) NOT NULL
 );
 
 CREATE TABLE transactions (
