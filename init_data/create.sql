@@ -7,14 +7,14 @@ CREATE TABLE songs (
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY NOT NULL, 
-    spotify_username VARCHAR(50) NOT NULL, 
-    spotify_password CHAR(50) NOT NULL
+    username VARCHAR(50) NOT NULL, 
+    password CHAR(50) NOT NULL
 );
 
 CREATE TABLE transactions (
     transaction_id SERIAL PRIMARY KEY,
     song_id INT,
-    user_id INT,
+    user_id,
     load_date DATE NOT NULL DEFAULT CURRENT_DATE,
     CONSTRAINT fk_song_id
         FOREIGN KEY (song_id) 

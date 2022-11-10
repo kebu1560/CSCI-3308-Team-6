@@ -334,21 +334,33 @@ app.get("/songs_db", (req, res) => {
 app.get("/add_song", async (req, res) => {
   console.log("add_song route");
 
-  //Creating a var Date to load into the db
-  let currentDate = new Date();
-  currentDate.toISOString().split("T")[0];
+  // CHecking if songs exists yet in our db
+  const existenceQuery = "SELECT * FROM songs WHERE song_id = $1;";
+  songExists = await db.any(existenceQuery, [req.query.song_id]);
+  console.log(songExists);
 
-  values = [
-    req.query.song_id,
-    req.query.title,
-    req.query.image_link,
-    req.query.artist,
-  ];
-  console.log(values);
-  const query =
+  // If song doesn't exist yet in the database we add it
+  if (songExists.length == 0){
+    console.log('song being added to song db');
+
+    songValues = [
+      req.query.song_id,
+      req.query.title,
+      req.query.image_link,
+      req.query.artist,
+    ];
+    console.log(songValues);
+
+    const query =
     "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
-  // values = [req.body];
-  await db.query(query, values);
+    await db.query(query, songValues);
+  }
+  // If song already exists, don't try to add it
+  else{
+    console.log('song already exists in db');
+  }
+  
+  
   res.send("Added song to db");
 });
 
