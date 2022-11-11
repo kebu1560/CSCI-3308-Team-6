@@ -329,11 +329,35 @@ app.get("/songs_db", (req, res) => {
     });
 });
 
+//Route to view transactions database
+app.get("/transactions_db", (req, res) => {
+  console.log("transactions_db route");
+
+  const query = "SELECT * FROM transactions;";
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
+
 //Route to add a song to the database
 // Must send all data necessary to the route in body
 app.get("/add_song", async (req, res) => {
   console.log("add_song route");
 
+  // Setting vars
+  const song_id = req.query.song_id;
+  const title = req.query.title;
+  const image_link = req.query.image_link;
+  const artist = req.query.artist;
+  const username = req.query.username;
+      
   // CHecking if songs exists yet in our db
   const existenceQuery = "SELECT * FROM songs WHERE song_id = $1;";
   songExists = await db.any(existenceQuery, [req.query.song_id]);
@@ -344,10 +368,10 @@ app.get("/add_song", async (req, res) => {
     console.log('song being added to song db');
 
     songValues = [
-      req.query.song_id,
-      req.query.title,
-      req.query.image_link,
-      req.query.artist,
+      song_id,
+      title,
+      image_link,
+      artist
     ];
     console.log(songValues);
 
@@ -360,7 +384,20 @@ app.get("/add_song", async (req, res) => {
     console.log('song already exists in db');
   }
   
-  
+  // updating transactions table
+  //Creating a var Date to load into the db
+  let currentDate = new Date();
+  console.log('date', currentDate);
+  currentDate.toISOString().split("T")[0];
+  console.log('date', currentDate);
+
+  const transactionQuery =
+  "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
+  transactionValues = [
+    song_id,
+    username
+  ];
+  await db.query(transactionQuery, transactionValues);
   res.send("Added song to db");
 });
 
