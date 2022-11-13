@@ -28,18 +28,3 @@ CREATE TABLE univerisities (
     university_name VARCHAR(200) NOT NULL
 );
 
--- CREATE TABLE songs_to_users (
---     song_id INT,
---     user_id INT,
---     CONSTRAINT fk_song_id
---         FOREIGN KEY (song_id) 
---             REFERENCES songs(song_id),
---     CONSTRAINT fk_user_id
---         FOREIGN KEY (user_id) 
---             REFERENCES users(user_id)    
--- );
-
--- CREATE TABLE universities_to_users (
---     FOREIGN KEY (university_id) REFERENCES universities(university_id),
---     FOREIGN KEY (user_id) REFERENCES users(user_id)
--- );
