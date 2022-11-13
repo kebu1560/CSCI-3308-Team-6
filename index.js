@@ -228,9 +228,95 @@ app.get("/login2", (req, res) => {
     "https://accounts.spotify.com/authorize?" +
       new URLSearchParams(params).toString()
   );
+});
+
+// Route to search for songs
+app.get("/search_song", async (req, res) => {
+  const q = req.query.q;
+  //limiting the number of results
+  limit = 10;
+
+  const options = {
+    method: "GET",
+    url: "https://shazam.p.rapidapi.com/search",
+    params: { term: q, locale: "en-US", offset: "0", limit: limit },
+    headers: {
+      "X-RapidAPI-Key": "5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771",
+      "X-RapidAPI-Host": "shazam.p.rapidapi.com",
+    },
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      // FInding number of songs and artists found
+      num_songs = response.data.tracks.hits.length;
+      num_artists = response.data.artists.hits.length;
+
+      console.log("$$$", response.data);
+      //Checking to make sure there are results being sent back
+      if (num_songs == 0 && num_artists == 0) {
+        res.send("No search results ");
+      }
+      //Creating an object to send back to client
+      params = {
+        tracks: [],
+        artists: []
+      };
+
+      // Iterating through each song and adding it to our response JSON
+      for (let i = 0; i < num_songs; i++) {
+        const title = response.data.tracks.hits[i].track.title;
+        const songId = response.data.tracks.hits[i].track.key;
+        const imageLink = response.data.tracks.hits[i].track.images.coverart;
+        const artist = response.data.tracks.hits[i].track.subtitle;
+        params["tracks"].push({
+          title: title,
+          SongId: songId,
+          artist: artist,
+          imageLink: imageLink,
+        });
+      }
+
+      console.log(response.data.artists.hits[0]);
+      // Iterating through each artist and adding it to our response JSON
+      for (let i = 0; i < num_artists; i++) {
+        const avatar_image_link = response.data.artists.hits[i].artist.avatar;
+        const artist_name = response.data.artists.hits[i].artist.name;
+        params["artists"].push({
+          avatar_image_link: avatar_image_link,
+          artist_name: artist_name,
+        });
+      }
+
+
+      console.log("params", params);
+      // res.send(params);
+      res.render("pages/search", params);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.send(error.message);
+    });
 
 });
 
+// Route to get songs data stored in our database
+app.get("/get_song", (req, res) => {
+  console.log("get_song route");
+
+  const query = "SELECT * FROM songs;";
+  values = [req.body];
+  db.one(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
 
 app.get('/search_song', async (req, res) =>{
     console.log('/search route');
