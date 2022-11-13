@@ -163,6 +163,7 @@ app.get("/login2", (req, res) => {
   );
 });
 
+// Route to search for songs
 app.get("/search_song", async (req, res) => {
   const q = req.query.q;
   //limiting the number of results
@@ -181,20 +182,23 @@ app.get("/search_song", async (req, res) => {
   axios
     .request(options)
     .then(function (response) {
-      // FInding number of songs found
-      num_results = response.data.tracks.hits.length;
+      // FInding number of songs and artists found
+      num_songs = response.data.tracks.hits.length;
+      num_artists = response.data.artists.hits.length;
 
       console.log("$$$", response.data);
       //Checking to make sure there are results being sent back
-      if (num_results == 0) {
+      if (num_songs == 0 && num_artists == 0) {
         res.send("No search results ");
       }
       //Creating an object to send back to client
       params = {
         tracks: [],
+        artists: []
       };
+
       // Iterating through each song and adding it to our response JSON
-      for (let i = 0; i < num_results; i++) {
+      for (let i = 0; i < num_songs; i++) {
         const title = response.data.tracks.hits[i].track.title;
         const songId = response.data.tracks.hits[i].track.key;
         const imageLink = response.data.tracks.hits[i].track.images.coverart;
@@ -206,6 +210,19 @@ app.get("/search_song", async (req, res) => {
           imageLink: imageLink,
         });
       }
+
+      console.log(response.data.artists.hits[0]);
+      // Iterating through each artist and adding it to our response JSON
+      for (let i = 0; i < num_artists; i++) {
+        const avatar_image_link = response.data.artists.hits[i].artist.avatar;
+        const artist_name = response.data.artists.hits[i].artist.name;
+        params["artists"].push({
+          avatar_image_link: avatar_image_link,
+          artist_name: artist_name,
+        });
+      }
+
+
       console.log("params", params);
       // res.send(params);
       res.render("pages/search", params);
@@ -215,10 +232,9 @@ app.get("/search_song", async (req, res) => {
       res.send(error.message);
     });
 
-  // console.log("/search route", params);
 });
 
-// Route to get single song data stored in our database
+// Route to get songs data stored in our database
 app.get("/get_song", (req, res) => {
   console.log("get_song route");
 
@@ -234,6 +250,7 @@ app.get("/get_song", (req, res) => {
       res.send("error");
     });
 });
+
 
 //Route to view songs database
 app.get("/songs_db", (req, res) => {
