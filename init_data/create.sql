@@ -23,7 +23,7 @@ CREATE TABLE transactions (
             REFERENCES users(username) 
 );
 
-CREATE TABLE univerisities (
+CREATE TABLE universities (
     university_id SERIAL PRIMARY KEY NOT NULL,
     university_name VARCHAR(200) NOT NULL
 );
