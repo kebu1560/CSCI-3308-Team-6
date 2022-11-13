@@ -269,6 +269,23 @@ app.get("/transactions_db", (req, res) => {
     });
 });
 
+//Route to view songs database
+app.get("/universities_db", (req, res) => {
+  console.log("universities db route");
+
+  const query = "SELECT * FROM universities;";
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
+
 //Route to add a song to the database
 // Must send all data necessary to the route in body
 app.get("/add_song", async (req, res) => {
