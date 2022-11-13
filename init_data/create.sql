@@ -5,13 +5,18 @@ CREATE TABLE songs (
     artist VARCHAR(100)
 );
 
+CREATE TABLE universities (
+    university_id SERIAL PRIMARY KEY NOT NULL,
+    university_name VARCHAR(200) NOT NULL
+);
+
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY NOT NULL, 
     password CHAR(50) NOT NULL,
     university_id INT,
     CONSTRAINT fk_university_id
         FOREIGN KEY (university_id) 
-            REFERENCES universities(university_id),
+            REFERENCES universities(university_id)
 );
 
 CREATE TABLE transactions (
@@ -27,8 +32,4 @@ CREATE TABLE transactions (
             REFERENCES users(username) 
 );
 
-CREATE TABLE universities (
-    university_id SERIAL PRIMARY KEY NOT NULL,
-    university_name VARCHAR(200) NOT NULL
-);
 
