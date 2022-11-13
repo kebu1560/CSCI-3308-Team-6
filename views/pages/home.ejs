@@ -1,22 +1,36 @@
-<%- include ('../partials/header') %>
+<%- include ('../partials/headers_logged_in') %>
 
 
 <main class="mb-48 flex flex-col">
-  <div class="p-4 flex flex-row">
-    <button class="text-2xl font-semibold">UniSpot</button>
-    <div class="ml-auto">
-      <button class="p-3 rounded-xl bg-green-200 text-lg font-semibold">
-        <a href="/login">Profile</a>
-      </button>
-
-    </div>
-  </div>
-  <div class="flex flex-col justify-center m-auto text-center ">
-
-    <p class="text-7xl mt-40 mb-8 font-bold">UniSpot</p>
-    <p class="text-4xl mb-8 ">Home Page</p>
-
   
+  <div class="flex flex-col justify-center m-auto text-center ">
+    <div class="py-4">
+      <div class="grid grid-cols-3 gap-4 mx-8 mt-16 cursor-pointer">
+        <div class="bg-stone-100 rounded-xl p-16 grid grid-rows-2">
+        <a href="/search_song?q=Gunna">
+          <p class="text-center text-5xl p-1 font-semibold mb-8 ">Search For Songs</p>
+        </a>
+
+          <!-- <button class="bg-white p-6 rounded-xl">Image</button> -->
+        </div>
+        
+      <div class="bg-stone-100 rounded-xl p-16 grid grid-rows-2 ">
+        <a href="/trends">
+          <p class="text-center text-5xl p-1 font-semibold mb-8 ">View Trends</p>
+        </a>
+        <!-- <button class="bg-white p-6 rounded-xl">Image</button> -->
+      </div>
+      
+      <div class="bg-stone-100 rounded-xl p-16 rounded-xl">
+        <a href="/profile">
+          <p class="text-center text-5xl p-1 font-semibold mb-8 ">Your Account</p>
+        </a>
+
+          <!-- <button class="bg-white p-6 rounded-xl">Image</button> -->
+        </div>
+    </div>
+      </div>
+  </div>
 </main>
 
 <%- include ('../partials/footer') %>

@@ -4,7 +4,7 @@ You should be updating the ReadMe.md file as you progress through the project. Y
 
 # Brief Application description
 
-UniSpot is a new way to connect with your university! Create a student account with just your city and school to see your university’s favorite songs, artists, and albums. Once you have created an account, you can add your Spotify playlists, songs, albums, or artists that you are listening to. Alternatively, you can create an artist account to see which university is your biggest fan, which will help you target the best places to tour!
+UniSpot is a new way to connect with your university! Create a student account with just your city and school to see your university’s favorite songs, artists, and albums. Once you have created an account, you can search songs, albums, or artists that you are listening to. Alternatively, you can create an artist account to see which university is your biggest fan, which will help you target the best places to tour!
 
 # Contributors
 

@@ -1,0 +1,9 @@
+* Pivoted from Spotify API to Rapid API in order to use the Shazam search_song call.
+* HTML and Javascript for Login/Register calls. Yet to finish setup for postgresSQL.
+* Fixed security leak - deleted .env file and added it to .gitignore with another version of the file stored locally to test put database.
+* Database diagram - final draft completed. Create/Insert.sql to be implemented next week.
+* HTML styling for UniSpot home page is completed but not fully functional yet.
+* Route to add a song to the database. 
+* Create statement for tables needed.
+* Insert.sql file works
+* Route to view tables in database works.
