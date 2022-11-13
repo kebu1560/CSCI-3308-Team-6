@@ -7,7 +7,11 @@ CREATE TABLE songs (
 
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY NOT NULL, 
-    password CHAR(50) NOT NULL
+    password CHAR(50) NOT NULL,
+    university_id INT,
+    CONSTRAINT fk_university_id
+        FOREIGN KEY (university_id) 
+            REFERENCES universities(university_id),
 );
 
 CREATE TABLE transactions (
