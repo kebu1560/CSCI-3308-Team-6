@@ -132,85 +132,6 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-// Necessary callback route for SPotify API authentication
-// SHould not be called directly by client
-app.get("/callback", async (req, res) => {
-  console.log("/callback route");
-
-  code = req.query.code;
-  console.log(req.query.code);
-
-  const authUrl = "https://accounts.spotify.com/api/token";
-
-  axios({
-    url: authUrl,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      // From Spotify documentation
-      Authorization:
-        "Basic " +
-        new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
-    },
-    // data must be x-www-urlform-encoded, so it must be turned into a URL search param object
-    data: new URLSearchParams({
-      grant_type: "authorization_code",
-      code: code,
-      redirect_uri: REDIRECT_URI,
-    }),
-  })
-    .then((results) => {
-      // Successful case
-      console.log(results.data);
-      access_token = results.data.access_token;
-      refresh_token = results.data.refresh_token;
-      res.send(results.data);
-    })
-    .catch((err) => {
-      // Handle errors
-      console.log(err);
-      res.send("Error. Check console log");
-    });
-});
-
-// Refresh token route for SPotify API authentication
-app.get("/refresh_token", async (req, res) => {
-  console.log("/refresh route");
-
-  console.log(refresh_token);
-
-  const refreshUrl = "https://accounts.spotify.com/api/token";
-
-  axios({
-    url: refreshUrl,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      // From Spotify documentation
-      Authorization:
-        "Basic " +
-        new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
-    },
-    // data must be x-www-urlform-encoded, so it must be turned into a URL search param object
-    data: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refresh_token,
-    }),
-  })
-    .then((results) => {
-      // Successful case
-      console.log(results.data);
-      access_token = results.data.access_token;
-      refresh_token = results.data.refresh_token;
-      res.send(results.data);
-    })
-    .catch((err) => {
-      // Handle errors
-      console.log(err);
-      res.send("Error. Check console log");
-    });
-});
-
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
 
@@ -240,15 +161,23 @@ app.get("/login2", (req, res) => {
   );
 });
 
+// Route to search for songs
 app.get("/search_song", async (req, res) => {
-  const q = req.query.q;
+  const q = req.query.search_query;
   //limiting the number of results
   limit = 10;
+
+  // console.log("@", req.query);
 
   const options = {
     method: "GET",
     url: "https://shazam.p.rapidapi.com/search",
-    params: { term: q, locale: "en-US", offset: "0", limit: limit },
+    params: {
+      term: q,
+      locale: "en-US",
+      offset: "0",
+      limit: limit,
+    },
     headers: {
       "X-RapidAPI-Key": "5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771",
       "X-RapidAPI-Host": "shazam.p.rapidapi.com",
@@ -258,20 +187,23 @@ app.get("/search_song", async (req, res) => {
   axios
     .request(options)
     .then(function (response) {
-      // FInding number of songs found
-      num_results = Object.keys(response.data).length;
+      // FInding number of songs and artists found
+      num_songs = response.data.tracks.hits.length;
+      num_artists = response.data.artists.hits.length;
 
-      console.log("$$$", response);
+      console.log("$$$", response.data);
       //Checking to make sure there are results being sent back
-      if (num_results == 0) {
+      if (num_songs == 0 && num_artists == 0) {
         res.send("No search results ");
       }
       //Creating an object to send back to client
       params = {
         tracks: [],
+        artists: [],
       };
+
       // Iterating through each song and adding it to our response JSON
-      for (let i = 0; i < num_results; i++) {
+      for (let i = 0; i < num_songs; i++) {
         const title = response.data.tracks.hits[i].track.title;
         const songId = response.data.tracks.hits[i].track.key;
         const imageLink = response.data.tracks.hits[i].track.images.coverart;
@@ -283,6 +215,18 @@ app.get("/search_song", async (req, res) => {
           imageLink: imageLink,
         });
       }
+
+      console.log(response.data.artists.hits[0]);
+      // Iterating through each artist and adding it to our response JSON
+      for (let i = 0; i < num_artists; i++) {
+        const avatar_image_link = response.data.artists.hits[i].artist.avatar;
+        const artist_name = response.data.artists.hits[i].artist.name;
+        params["artists"].push({
+          avatar_image_link: avatar_image_link,
+          artist_name: artist_name,
+        });
+      }
+
       console.log("params", params);
       // res.send(params);
       res.render("pages/search", params);
@@ -291,11 +235,9 @@ app.get("/search_song", async (req, res) => {
       console.error(error);
       res.send(error.message);
     });
-
-  // console.log("/search route", params);
 });
 
-// Route to get single song data stored in our database
+// Route to get songs data stored in our database
 app.get("/get_song", (req, res) => {
   console.log("get_song route");
 
@@ -329,27 +271,108 @@ app.get("/songs_db", (req, res) => {
     });
 });
 
+//Route to view transactions database
+app.get("/transactions_db", (req, res) => {
+  console.log("transactions_db route");
+
+  const query = "SELECT * FROM transactions;";
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
+
+//Route to view songs database
+app.get("/universities_db", (req, res) => {
+  console.log("universities db route");
+
+  const query = "SELECT * FROM universities;";
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
+
 //Route to add a song to the database
 // Must send all data necessary to the route in body
 app.get("/add_song", async (req, res) => {
   console.log("add_song route");
 
+  // Setting vars
+  const song_id = req.query.song_id;
+  const title = req.query.title;
+  const image_link = req.query.image_link;
+  const artist = req.query.artist;
+  const username = req.query.username;
+
+  // CHecking if songs exists yet in our db
+  const existenceQuery = "SELECT * FROM songs WHERE song_id = $1;";
+  songExists = await db.any(existenceQuery, [req.query.song_id]);
+  console.log(songExists);
+
+  // If song doesn't exist yet in the database we add it
+  if (songExists.length == 0) {
+    console.log("song being added to song db");
+
+    songValues = [song_id, title, image_link, artist];
+    console.log(songValues);
+
+    const query =
+      "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
+    await db.query(query, songValues);
+  }
+  // If song already exists, don't try to add it
+  else {
+    console.log("song already exists in db");
+  }
+
+  // updating transactions table
   //Creating a var Date to load into the db
   let currentDate = new Date();
+  console.log("date", currentDate);
   currentDate.toISOString().split("T")[0];
+  console.log("date", currentDate);
 
-  values = [
-    req.query.song_id,
-    req.query.title,
-    req.query.image_link,
-    req.query.artist,
-  ];
-  console.log(values);
-  const query =
-    "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
-  // values = [req.body];
-  await db.query(query, values);
+  const transactionQuery =
+    "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
+  transactionValues = [song_id, username];
+  await db.query(transactionQuery, transactionValues);
   res.send("Added song to db");
+});
+
+//Route to see the top songs at universities
+app.get("/university_chart", (req, res) => {
+  console.log("university chart route");
+
+  // Getting data from request
+  const university_id = req.query.university_id;
+  const limit = req.query.limit;
+  const time = req.query.time;
+
+  const query =
+    "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
+  values = [university_id, time, limit];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
 });
 
 // 9

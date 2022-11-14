@@ -5,35 +5,31 @@ CREATE TABLE songs (
     artist VARCHAR(100)
 );
 
+CREATE TABLE universities (
+    university_id SERIAL PRIMARY KEY NOT NULL,
+    university_name VARCHAR(200) NOT NULL
+);
+
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY NOT NULL, 
-    spotify_username VARCHAR(50) NOT NULL, 
-    spotify_password CHAR(50) NOT NULL
+    username VARCHAR(50) PRIMARY KEY NOT NULL, 
+    password CHAR(50) NOT NULL,
+    university_id INT,
+    CONSTRAINT fk_university_id
+        FOREIGN KEY (university_id) 
+            REFERENCES universities(university_id)
 );
 
 CREATE TABLE transactions (
     transaction_id SERIAL PRIMARY KEY,
     song_id INT,
-    load_date DATE NOT NULL DEFAULT CURRENT_DATE
-);
-
-CREATE TABLE univerisities (
-    university_id SERIAL PRIMARY KEY NOT NULL,
-    university_name VARCHAR(200) NOT NULL
-);
-
-CREATE TABLE songs_to_users (
-    song_id INT,
-    user_id INT,
+    username VARCHAR(50),
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_song_id
         FOREIGN KEY (song_id) 
             REFERENCES songs(song_id),
-    CONSTRAINT fk_user_id
-        FOREIGN KEY (user_id) 
-            REFERENCES users(user_id)    
+    CONSTRAINT fk_username
+        FOREIGN KEY (username) 
+            REFERENCES users(username) 
 );
 
--- CREATE TABLE universities_to_users (
---     FOREIGN KEY (university_id) REFERENCES universities(university_id),
---     FOREIGN KEY (user_id) REFERENCES users(user_id)
--- );
+
