@@ -364,11 +364,11 @@ app.get("/university_chart", (req, res) => {
 
   // Getting data from request
   const university_id = req.query.university_id;
-  const limit = req.query.time;
+  const limit = req.query.limit;
   const time = req.query.time;
 
-  const query = "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC;";
-  values = [university_id];
+  const query = "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
+  values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
       console.log("data is", data);
