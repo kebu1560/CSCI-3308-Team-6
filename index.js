@@ -358,6 +358,29 @@ app.get("/add_song", async (req, res) => {
   res.send("Added song to db");
 });
 
+//Route to see the top songs at universities
+app.get("/university_chart", (req, res) => {
+  console.log("university chart route");
+
+  // Getting data from request
+  const university_id = req.query.university_id;
+  const limit = req.query.time;
+  const time = req.query.time;
+
+  const query = "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC;";
+  values = [university_id];
+  db.any(query, values)
+    .then(async (data) => {
+      console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
+
+
 // 9
 // Authentication Middleware.
 const auth = (req, res, next) => {
