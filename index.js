@@ -71,36 +71,41 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const username = req.body.username;
-  const query = `SELECT * FROM users WHERE spotify_username = '${username}';`;
+  const {username, password} = req.body;
+  const query = 'SELECT password FROM users WHERE username = $1;';
   console.log("attempting to login");
 
-  db.any(query)
-    .then(async (data) => {
+  const returnedUser = await db.one(query, [username])
+    .then(async data => {
       console.log("@@@@", data);
-      if (data.length > 0) {
-        // console.log("data@", data[0]);
-        const match = await bcrypt.compare(
-          data[0].spotify_username,
-          data[0].spotify_password
-        ); //await is explained in #8
-
-        if (!match) {
-          return console.log("Incorrect username or password.");
-        } else {
+      if(data)
+      {
+        //if user was found, make sure password matches
+        const match = await bcrypt.compare(req.body.password, data.password);
+        if (match) {
+          //If password matches, take user to home page
           req.session.user = {
             api_key: process.env.API_KEY,
           };
-          req.session.save();
-          res.redirect("/home");
+          req.seesion.save();
+          return res.redirect("/home");
         }
-      } else {
-        res.redirect("/login");
+        else {
+          //incorrect password error
+          console.log("Incorrect username or password.");
+          res.render('pages/login', {message: "Incorrect username or password", error: true});
+        };
+      }
+      else
+      {
+        //user does not exist
+        console.log("User does not exist");
+        res.render('pages/register', {message: "User does not exist, please create an account", error: true});
       }
     })
-    .catch(function (err) {
-      console.log("Error in logging in,", err);
-      res.render("pages/login");
+    .catch(err => {
+      console.log("Error in logging in, ", err);
+      res.render('pages/login', {message: "Database connection failed", error: true});
     });
 });
 
@@ -112,19 +117,18 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const username = req.body.username;
-  const hash = await bcrypt.hash(req.body.password, 10);
 
-  const query = `INSERT INTO users (spotify_username, spotify_password, location) VALUES ('${username}','${hash}','Boulder');`;
+  const hash = await bcrypt.hash(req.body.password, 10);
+  const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
+  
   db.any(query)
-    .then((data) => {
+    .then(() => {
       res.redirect("/login");
     })
     .catch(function (err) {
+      console.log("Error in logging in,", err);
       res.redirect("/register");
     })
-    .catch(function (err) {
-      console.log("Error in logging in,", err);
-    });
 });
 
 app.get("/logout", (req, res) => {
