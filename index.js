@@ -132,8 +132,6 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-
-
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
 
@@ -165,14 +163,21 @@ app.get("/login2", (req, res) => {
 
 // Route to search for songs
 app.get("/search_song", async (req, res) => {
-  const q = req.query.q;
+  const q = req.query.search_query;
   //limiting the number of results
   limit = 10;
+
+  // console.log("@", req.query);
 
   const options = {
     method: "GET",
     url: "https://shazam.p.rapidapi.com/search",
-    params: { term: q, locale: "en-US", offset: "0", limit: limit },
+    params: {
+      term: q,
+      locale: "en-US",
+      offset: "0",
+      limit: limit,
+    },
     headers: {
       "X-RapidAPI-Key": "5c60a9f7e5msh6e3e990c63159adp184964jsn0ca34bbc7771",
       "X-RapidAPI-Host": "shazam.p.rapidapi.com",
@@ -194,7 +199,7 @@ app.get("/search_song", async (req, res) => {
       //Creating an object to send back to client
       params = {
         tracks: [],
-        artists: []
+        artists: [],
       };
 
       // Iterating through each song and adding it to our response JSON
@@ -222,7 +227,6 @@ app.get("/search_song", async (req, res) => {
         });
       }
 
-
       console.log("params", params);
       // res.send(params);
       res.render("pages/search", params);
@@ -231,7 +235,6 @@ app.get("/search_song", async (req, res) => {
       console.error(error);
       res.send(error.message);
     });
-
 });
 
 // Route to get songs data stored in our database
@@ -250,7 +253,6 @@ app.get("/get_song", (req, res) => {
       res.send("error");
     });
 });
-
 
 //Route to view songs database
 app.get("/songs_db", (req, res) => {
@@ -314,46 +316,38 @@ app.get("/add_song", async (req, res) => {
   const image_link = req.query.image_link;
   const artist = req.query.artist;
   const username = req.query.username;
-      
+
   // CHecking if songs exists yet in our db
   const existenceQuery = "SELECT * FROM songs WHERE song_id = $1;";
   songExists = await db.any(existenceQuery, [req.query.song_id]);
   console.log(songExists);
 
   // If song doesn't exist yet in the database we add it
-  if (songExists.length == 0){
-    console.log('song being added to song db');
+  if (songExists.length == 0) {
+    console.log("song being added to song db");
 
-    songValues = [
-      song_id,
-      title,
-      image_link,
-      artist
-    ];
+    songValues = [song_id, title, image_link, artist];
     console.log(songValues);
 
     const query =
-    "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
+      "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
     await db.query(query, songValues);
   }
   // If song already exists, don't try to add it
-  else{
-    console.log('song already exists in db');
+  else {
+    console.log("song already exists in db");
   }
-  
+
   // updating transactions table
   //Creating a var Date to load into the db
   let currentDate = new Date();
-  console.log('date', currentDate);
+  console.log("date", currentDate);
   currentDate.toISOString().split("T")[0];
-  console.log('date', currentDate);
+  console.log("date", currentDate);
 
   const transactionQuery =
-  "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
-  transactionValues = [
-    song_id,
-    username
-  ];
+    "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
+  transactionValues = [song_id, username];
   await db.query(transactionQuery, transactionValues);
   res.send("Added song to db");
 });
@@ -367,7 +361,8 @@ app.get("/university_chart", (req, res) => {
   const limit = req.query.limit;
   const time = req.query.time;
 
-  const query = "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
+  const query =
+    "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
   values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
@@ -379,7 +374,6 @@ app.get("/university_chart", (req, res) => {
       res.send("error");
     });
 });
-
 
 // 9
 // Authentication Middleware.
