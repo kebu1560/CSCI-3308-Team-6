@@ -19,6 +19,6 @@ INSERT INTO users (username, password, university_id) VALUES ('User1', 'pw', 1);
 
 
 -- transactions
-INSERT INTO transactions (song_id, username) VALUES (44827968, 'Blake');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (44827968, 'Blake', '2022-11-05T01:03:26.326Z');
 INSERT INTO transactions (song_id, username) VALUES (404666905, 'Blake');
 INSERT INTO transactions (song_id, username) VALUES (404666905, 'User1');
