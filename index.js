@@ -71,17 +71,18 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const {username, password} = req.body;
-  const query = 'SELECT password FROM users WHERE username = $1;';
+  const query = 'SELECT * FROM users WHERE username = $1;';
   console.log("attempting to login");
 
-  const returnedUser = await db.one(query, [username])
+  const returnedUser = await db.oneOrNone(query, [req.body.username])
     .then(async data => {
-      console.log("@@@@", data);
+      //Not going to log the data for safety reasons
+      //console.log("@@@@", data);
       if(data)
       {
         //if user was found, make sure password matches
         const match = await bcrypt.compare(req.body.password, data.password);
+
         if (match) {
           //If password matches, take user to home page
           req.session.user = {
