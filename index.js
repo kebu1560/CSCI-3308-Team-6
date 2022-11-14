@@ -82,7 +82,9 @@ app.post("/login", async (req, res) => {
       {
         //if user was found, make sure password matches
         const match = await bcrypt.compare(req.body.password, data.password);
-
+        console.log(data.password);
+        const hash = await bcrypt.hash(req.body.password, 10);
+        console.log(hash);
         if (match) {
           //If password matches, take user to home page
           req.session.user = {
@@ -117,12 +119,24 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username; 
+  //need to check if user already exists
+  const userExistsquery = `SELECT * FROM users WHERE username = ${username};`;
 
-  const hash = await bcrypt.hash(req.body.password, 10);
-  const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
+  if(userExistsquery)
+  {
+    //This username is already in use
+    //TODO: display error to user
+    console.log("Username already in use.");
+    res.redirect("/register");
+  } 
+  else
+  {
+    //Fine to register new user
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
   
-  db.any(query)
+    db.any(query)
     .then(() => {
       res.redirect("/login");
     })
@@ -130,6 +144,7 @@ app.post("/register", async (req, res) => {
       console.log("Error in logging in,", err);
       res.redirect("/register");
     })
+  }
 });
 
 app.get("/logout", (req, res) => {
