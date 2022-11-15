@@ -1,0 +1,6 @@
+* Finalized database format, completed a database diagram and create.sql
+* Implemented transactions database
+* Implemented "adding" song feature in UI and API
+* Completed university_charts route, which is the core functionality of the app. It can sort songs by timeframe and univrsity of student that likes the song
+* We have a score associated with each song's popularity at a given university (done by a query in the API)
+* Added dummy data to our database for demonstration/testing purposes
