@@ -4,3 +4,4 @@
 * Completed university_charts route, which is the core functionality of the app. It can sort songs by timeframe and univrsity of student that likes the song
 * We have a score associated with each song's popularity at a given university (done by a query in the API)
 * Added dummy data to our database for demonstration/testing purposes
+* profile page front-end created, will display users: university, username and password once back-end is finished. Option to Edit/Disable account tbd.
