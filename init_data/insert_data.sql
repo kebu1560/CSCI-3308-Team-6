@@ -43,7 +43,7 @@ INSERT INTO users (username, password, university_id) VALUES ('User3', 'pw', 1);
 
 -- Transactions
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (44827968, 'Blake', '2022-11-05T01:03:26.326Z');
-INSERT INTO transactions (song_id, username, load_timestamp) VALUES (157666213 'User1' '2022-11-04T01:00:00.000Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (157666213, 'User1', '2022-11-04T01:00:00.000Z');
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (404666905, 'User2', '2022-11-03T02:36:44.084Z');
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (70664729, 'User3', '2022-09-05T02:39:30.423Z');
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (221452681, 'Blake', '2022-10-23T09:28:54.237Z');
