@@ -7,6 +7,8 @@ What have you done since the last meeting?
 * Added dummy data to our database for demonstration/testing purposes (includes: songs, university, users, transaction(multiple per song))
 * profile page front-end created, will display users: university, username and password once back-end is finished. Option to Edit/Disable account tbd.
 * Debugged login and register routes
+* Added ability to search for songs
+* Connected API results to frontend and displayed them in the UI
 What are you planning to do until the next meeting?
 *create top songs page using data gained from transsactions database
 *fix/update password hashing for register and login
@@ -16,4 +18,5 @@ What are the challenges you are facing?
 *login and register page not working although DB has been initilized (hard for testing data aquisition)
 *Timestamp for transactions db needs to have a ton more dummy data
 *More routes to access other data tables
-
+* Implement displaying the top songs for the universities
+* User session and dynamic navbar
