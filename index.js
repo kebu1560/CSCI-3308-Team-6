@@ -395,12 +395,9 @@ console.log("Server is listening on port 3000");
 
 
 
-
-
-
-
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {
-    spotify_username: req.session.user.username
+    username: req.session.user.username
+    
 });
 })
