@@ -16,6 +16,7 @@ What are you planning to do until the next meeting?
 *add option to edit your username/password in profile page
 What are the challenges you are facing?
 *login and register page not working although DB has been initilized (hard for testing data aquisition)
+*moving project code to an overarching src folder messes with docker, need to resolve that issue
 *Timestamp for transactions db needs to have a ton more dummy data
 *More routes to access other data tables
 * Implement displaying the top songs for the universities
