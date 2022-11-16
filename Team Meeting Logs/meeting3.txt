@@ -21,3 +21,4 @@ What are the challenges you are facing?
 *More routes to access other data tables
 * Implement displaying the top songs for the universities
 * User session and dynamic navbar
+* Formatted data/analytics graphs, next step is to display database data on these graphs
