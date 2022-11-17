@@ -374,7 +374,7 @@ app.get("/university_chart", (req, res) => {
       res.send("error");
     });
 });
-
+/*
 // 9
 // Authentication Middleware.
 const auth = (req, res, next) => {
@@ -388,18 +388,19 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 app.use(auth);
-
+*/
 
 app.listen(3000);
 console.log("Server is listening on port 3000");
 
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {
-    
+    /*
     username: req.session.user.username,
     password: req.session.user.password,
     university_id:req.session.user.university_id
     //need to update this to reflect user ID and password (not functional yet)
+    */
 
 });
 })
