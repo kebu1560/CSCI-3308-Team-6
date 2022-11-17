@@ -35,13 +35,13 @@ INSERT INTO universities (university_name) VALUES ('Colorado School of Mines');
 
 
 -- Users
-INSERT INTO users (username, password, university_id) VALUES ('Blake', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User1', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User2', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User3', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User4', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User5', 'pw', 1);
-INSERT INTO users (username, password, university_id) VALUES ('User6', 'pw', 1);
+INSERT INTO users (username, password, university_id, location) VALUES ('Blake', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User1', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User2', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User3', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User4', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User5', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User6', 'pw', 1, 'Boulder');
 
 
 -- Transactions
