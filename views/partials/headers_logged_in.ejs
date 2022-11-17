@@ -9,7 +9,17 @@
     <title>UniSpot</title>
     <!-- TO-DO: Add the <link> tag to include bootstrap stylesheet -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@2.38.0/dist/full.css" rel="stylesheet" type="text/css" /> -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              unigreen: '#67e4aa',
+            }
+          }
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="p-4 flex flex-row">
