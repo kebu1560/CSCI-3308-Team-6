@@ -366,8 +366,9 @@ app.get("/university_chart", (req, res) => {
   values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
-      console.log("data is", data);
-      res.send(data);
+      console.log("data::::", data);
+      // res.send(data);
+      res.render("pages/top_songs", { data: data });
     })
     .catch((err) => {
       console.log(err);
