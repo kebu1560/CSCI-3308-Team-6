@@ -14,8 +14,13 @@ INSERT INTO universities (university_name) VALUES ('Colorado School of Mines');
 
 
 -- users
-INSERT INTO users (username, password, location, university_id) VALUES ('Blake', 'pw', 'Boulder', 1);
-INSERT INTO users (username, password, location, university_id) VALUES ('User1', 'pw', 'Boulder', 1);
+INSERT INTO users (username, password, university_id) VALUES ('Blake', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User1', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User2', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User3', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User4', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User5', 'pw', 1);
+INSERT INTO users (username, password, university_id) VALUES ('User6', 'pw', 1);
 
 
 -- transactions
