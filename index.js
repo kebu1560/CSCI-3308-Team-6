@@ -78,21 +78,13 @@ app.post("/login", async (req, res) => {
     .then(async data => {
       if(data)
       {
-        //if user was found, make sure password matches
-        const match = await bcrypt.compare(req.body.password, data.password);
-
-        //COMMENT THIS OUT when done testing (security vulnerability)
-        console.log(data.password);
-        const hash = await bcrypt.hash(req.body.password, 10);
-        console.log(hash);
-        //
-
+        const match = await bcrypt.compare(req.body.password.trim(), data.password.trim());
         if (match) {
           //If password matches, take user to home page
           req.session.user = {
             api_key: process.env.API_KEY,
           };
-          req.seesion.save();
+          req.session.save();
           return res.redirect("/home");
         }
         else {
@@ -112,8 +104,8 @@ app.post("/login", async (req, res) => {
       console.log("Error in logging in, ", err);
       res.render('pages/login', {message: "Database connection failed", error: true});
     });
-});
-
+  });
+  
 app.get("/register", (req, res) => {
   // console.log("/login");
   // res.send('home');
@@ -122,10 +114,12 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const username = req.body.username; 
+  // const password = req.body.password;
+  const hash = await bcrypt.hash(req.body.password.trim(), 10);
+
   //need to check if user already exists?
 
   //Fine to register new user
-  const hash = await bcrypt.hash(req.body.password, 10);
   const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
 
   db.any(query)
