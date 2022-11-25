@@ -42,6 +42,8 @@ INSERT INTO users (username, password, university_id, location) VALUES ('User3',
 INSERT INTO users (username, password, university_id, location) VALUES ('User4', 'pw', 1, 'Boulder');
 INSERT INTO users (username, password, university_id, location) VALUES ('User5', 'pw', 1, 'Boulder');
 INSERT INTO users (username, password, university_id, location) VALUES ('User6', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User7', 'pw', 1, 'Boulder');
+INSERT INTO users (username, password, university_id, location) VALUES ('User8', 'pw', 1, 'Boulder');
 
 
 -- Transactions
@@ -131,3 +133,42 @@ INSERT INTO transactions (song_id, username, load_timestamp) VALUES (70664729, '
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (70664729, 'User2', '2022-02-27T01:56:29.831Z');
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (221452681, 'Blake', '2022-10-23T09:28:54.237Z');
 INSERT INTO transactions (song_id, username, load_timestamp) VALUES (59063717, 'Blake', '2022-10-03T02:36:44.084Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (44827968, 'User7', '2022-11-16T01:18:19.834Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (157666213, 'User7', '2022-11-16T02:37:51.934Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (404666905, 'User7', '2022-11-16T03:24:32.672Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (70664729, 'User7', '2022-11-16T04:17:48.568Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (221452681, 'User7', '2022-11-16T05:10:29.702Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (59063717, 'User7', '2022-11-15T06:50:39.602Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (49944485, 'User7', '2022-11-15T07:48:19.792Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (46757041, 'User7', '2022-11-15T08:20:48.305Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (50228693, 'User7', '2022-11-17T09:00:16.345Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (324443962, 'User7', '2022-11-17T10:13:36.603Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (489784199, 'User7', '2022-11-17T11:10:13.602Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (640034010, 'User7', '2022-11-18T12:40:48.593Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (407673089, 'User7', '2022-11-18T12:58:19.306Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (327081951, 'User7', '2022-11-19T11:47:49.238Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (319570836, 'User7', '2022-11-19T10:20:23.692Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (228817222, 'User7', '2022-11-20T09:57:47.692Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (58280557, 'User7', '2022-11-20T08:39:10.092Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (435160184, 'User7', '2022-11-21T07:46:48.962Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (109582281, 'User7', '2022-11-21T06:44:20.602Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (56890076, 'User7', '2022-11-22T05:28:50.705Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (136812777, 'User7', '2022-11-23T04:29:10.782Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (52754378, 'User7', '2022-11-22T03:45:50.710Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (377495989, 'User7', '2022-11-23T02:51:58.702Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (157666207, 'User7', '2022-11-22T01:41:28.993Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (46757041, 'User8', '2022-11-26T01:20:48.305Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (50228693, 'User8', '2022-11-26T02:00:16.345Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (324443962, 'User8', '2022-11-26T03:13:36.603Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (489784199, 'User8', '2022-11-26T04:10:13.602Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (640034010, 'User8', '2022-11-26T05:40:48.593Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (407673089, 'User8', '2022-11-26T06:58:19.306Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (327081951, 'User8', '2022-11-26T07:47:49.238Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (319570836, 'User8', '2022-11-26T08:20:23.692Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (228817222, 'User8', '2022-11-26T09:57:47.692Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (58280557, 'User8', '2022-11-26T10:39:10.092Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (435160184, 'User8', '2022-11-26T11:46:48.962Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (109582281, 'User8', '2022-11-26T12:44:20.602Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (56890076, 'User8', '2022-11-26T10:28:50.705Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (136812777, 'User8', '2022-11-26T06:29:10.782Z');
+INSERT INTO transactions (song_id, username, load_timestamp) VALUES (52754378, 'User8', '2022-11-26T02:45:50.710Z');
