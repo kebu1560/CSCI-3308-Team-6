@@ -70,8 +70,17 @@ app.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
+const user = {
+  username: undefined,
+  password: undefined,
+  university_id: undefined,
+}
+
 app.post("/login", async (req, res) => {
+  const username = req.body.username;
   const query = 'SELECT * FROM users WHERE username = $1;';
+  const values = [username];
+
   console.log("attempting to login");
 
   const returnedUser = await db.oneOrNone(query, [req.body.username])
@@ -84,7 +93,14 @@ app.post("/login", async (req, res) => {
           req.session.user = {
             api_key: process.env.API_KEY,
           };
-          req.session.save();
+          db.one(query, values)
+          .then(data => {
+            user.username = data.username;
+            user.password = data.password;
+            user.university_id = data.university_id;
+            req.session.user = user;
+            req.session.save();
+            })
           return res.redirect("/home");
         }
         else {
@@ -379,7 +395,7 @@ app.get("/university_chart", (req, res) => {
       res.send("error");
     });
 });
-/*
+
 // 9
 // Authentication Middleware.
 const auth = (req, res, next) => {
@@ -393,19 +409,15 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 app.use(auth);
-*/
 
 app.listen(3000);
 console.log("Server is listening on port 3000");
 
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {
-    /*
     username: req.session.user.username,
     password: req.session.user.password,
     university_id:req.session.user.university_id
     //need to update this to reflect user ID and password (not functional yet)
-    */
-
 });
 })
