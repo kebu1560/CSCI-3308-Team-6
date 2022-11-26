@@ -81,7 +81,7 @@ app.get("/home", (req, res) => {
   const time = req.query.time ? req.query.time : "365days";
 
   query =
-    "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
+    "SELECT songs.song_id, songs.artist, songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link, songs.song_id) ORDER BY(popularity_score) DESC LIMIT $3;";
   values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
