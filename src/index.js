@@ -59,9 +59,44 @@ app.get("/", (req, res) => {
 });
 
 app.get("/home", (req, res) => {
-  // console.log("/ route");
-  // res.send('home');
-  res.render("pages/home");
+  // get universities for dropdown list
+  var query = "SELECT * FROM universities;";
+  var uni_list = null;
+  values = [req.body];
+  db.any(query, values)
+    .then(async (data) => {
+      // res.render("pages/home", { data: data, users_uni: 1 });
+      uni_list = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+
+  // console.log("university chart route");
+
+  // Getting data from request
+  const university_id = req.query.university_id ? req.query.university_id : 1;
+  const limit = req.query.limit ? req.query.limit : 10;
+  const time = req.query.time ? req.query.time : "365days";
+
+  query =
+    "SELECT songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link) ORDER BY(popularity_score) DESC LIMIT $3;";
+  values = [university_id, time, limit];
+  db.any(query, values)
+    .then(async (data) => {
+      // console.log("data::::", data);
+      res.render("pages/home", {
+        songs: data,
+        uni_list: uni_list,
+        uni_id: university_id,
+        time: time,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
 });
 
 app.get("/login", (req, res) => {
@@ -71,14 +106,17 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const query = 'SELECT * FROM users WHERE username = $1;';
+  const query = "SELECT * FROM users WHERE username = $1;";
   console.log("attempting to login");
 
-  const returnedUser = await db.oneOrNone(query, [req.body.username])
-    .then(async data => {
-      if(data)
-      {
-        const match = await bcrypt.compare(req.body.password.trim(), data.password.trim());
+  const returnedUser = await db
+    .oneOrNone(query, [req.body.username])
+    .then(async (data) => {
+      if (data) {
+        const match = await bcrypt.compare(
+          req.body.password.trim(),
+          data.password.trim()
+        );
         if (match) {
           //If password matches, take user to home page
           req.session.user = {
@@ -86,26 +124,32 @@ app.post("/login", async (req, res) => {
           };
           req.session.save();
           return res.redirect("/home");
-        }
-        else {
+        } else {
           //incorrect password error
           console.log("Incorrect username or password.");
-          res.render('pages/login', {message: "Incorrect username or password", error: true});
-        };
-      }
-      else
-      {
+          res.render("pages/login", {
+            message: "Incorrect username or password",
+            error: true,
+          });
+        }
+      } else {
         //user does not exist
         console.log("User does not exist");
-        res.render('pages/register', {message: "User does not exist, please create an account", error: true});
+        res.render("pages/register", {
+          message: "User does not exist, please create an account",
+          error: true,
+        });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log("Error in logging in, ", err);
-      res.render('pages/login', {message: "Database connection failed", error: true});
+      res.render("pages/login", {
+        message: "Database connection failed",
+        error: true,
+      });
     });
-  });
-  
+});
+
 app.get("/register", (req, res) => {
   // console.log("/login");
   // res.send('home');
@@ -113,7 +157,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const username = req.body.username; 
+  const username = req.body.username;
   // const password = req.body.password;
   const hash = await bcrypt.hash(req.body.password.trim(), 10);
 
@@ -123,13 +167,13 @@ app.post("/register", async (req, res) => {
   const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
 
   db.any(query)
-  .then(() => {
-    res.redirect("/login");
-  })
-  .catch(function (err) {
-    console.log("Error in logging in,", err);
-    res.redirect("/register");
-  })
+    .then(() => {
+      res.redirect("/login");
+    })
+    .catch(function (err) {
+      console.log("Error in logging in,", err);
+      res.redirect("/register");
+    });
 });
 
 app.get("/logout", (req, res) => {
@@ -139,7 +183,6 @@ app.get("/logout", (req, res) => {
 
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
-
 app.get("/login2", (req, res) => {
   console.log("/login route");
 
