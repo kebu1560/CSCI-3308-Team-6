@@ -2,26 +2,58 @@
 
 
 <main class="mb-48 flex flex-col">
-  
-  <div>
-    <div class="py-4">
-      <div class="grid grid-cols-1 gap-4">
+    <div class="py-4">   
+      <div class="grid grid-cols-1 gap-4">  
         <div class="grid grid-cols-1 gap-4 mx-16 rounded-xl">
-          <div class="rounded-xl">
+          <hr>
 
-        <p class="font-semibold text-4xl flex mx-auto text-center mb-8">Top Songs</p>
-        <div class="rounded-xl mb-16 bg-stone-100 grid grid-cols-1 gap-8 py-16">
-          <div>
-            <p class="text-5xl font-semibold mb-2 ml-16">Search For A Song</p>
-          </div>
-          <!-- Search Bar -->
-          <form action="/search_song" method="get" class="ml-16" >
-            <p class="text-2xl p-1 font-semibold text-gray-400 mb-8">Enter Drake, Taylor Swift, etc <br/> and click on the card to listen!</p>
-            <input id="search_query" name="search_query" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
-            <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold">Search &nbsp;🔍 </button>
+         
+          <!-- <hr> -->
+          <p class="font-semibold text-7xl mt-16  mx-auto">Whats Trending?</p>
+          <p class=" text-2xl my-4 mx-auto text-gray-400">Showing results for:</p>
+          <form action="/home" method="get" class="mr-auto grid grid-cols-3 p-4 bg-stone-100 max-w-3xl mx-auto gap-4 text-lg rounded-xl" >
+            <select name="university_id" id="university_id" class="rounded-xl p-4 ">
+                <% 
+                  if (uni_list) { 
+                    options = '';
+                    uni_list.forEach((result) => {
+                      options += '<option ';
+                      if (result.university_id == uni_id) {
+                        options += ' selected ';
+                      }
+                      options += 'value="' + result.university_id + '">' + result.university_name+ '</option>';
+                    })
+                    }; %> 
+                <%- options %> 
+            </select>
+            <select name="time" id="time" class="rounded-xl p-4 " >
+              <% 
+                    time_options = '';
+                    time_options += '<option ';
+                    if ("365days" == time) {
+                        time_options += ' selected ';
+                    }
+                    time_options += 'value="365days">Past Year</option>';
+                    time_options += '<option ';
+                    if ("31days" == time) {
+                        time_options += ' selected ';
+                    }
+                    time_options += 'value="31days">Past Month</option>';
+                    time_options += '<option ';
+                    if ("7days" == time) {
+                        time_options += ' selected ';
+                    }
+                    time_options += 'value="7days">Past Week</option>';
+                %> 
+                <%- time_options %> 
+            </select>
+            <button type="submit" class="p-2 rounded-xl bg-white mt-1 hover:bg-unigreen hover:text-white">Update</button>
           </form>
-          </div>
-            <div class="grid grid-cols-5 gap-4">    
+
+          <div class="rounded-xl">
+            <p class="font-semibold text-4xl flex mx-auto text-center my-8">Top 10 Songs</p>
+
+            <div class="grid grid-cols-5 gap-4 mb-16">    
               <% 
                 if (songs) { 
                   username = '????';
@@ -29,8 +61,7 @@
                   count = 0;
                   songs.forEach((result) => {
                     count++;
-                    console.log('f',result);
-                    cards += '<a href="/add_songs?song_id=' + result.song_id + '&title=' + result.title + '&image_link=' + result.image_link + '&artist=' + result.artist + '&username=' + username + '">';
+                    cards += '<a href="/add_song?song_id=' + result.song_id + '&title=' + result.title + '&image_link=' + result.image_link + '&artist=' + result.artist + '&username=' + user.username + '">';
                     cards += '<div class="bg-stone-100 cursor-pointer rounded-xl hover:bg-unigreen p-4 ">';
                     cards += '<img class="rounded" src="' + result.image_link + '">';
                     cards += '<div class="grid grid-cols-1 mt-2 font-semibold">';
@@ -42,61 +73,34 @@
                   }) }; %> 
                 <%- cards %> 
             </div>
-            <p class="font-semibold text-4xl flex mx-auto text-center mt-24 mb-8">Data Trends&nbsp;
-               <div class="bg-stone-100 cursor-pointer grid grid-rows-2 p-12 rounded-lg hover:bg-unigreen">
-                <p class="font-semibold text-2xl flex mx-auto text-center">View Trends</p>
-                <div class="text-7xl text-center">🔥</div>
-              </div> 
-               <p class="font-semibold text-4xl flex mx-auto text-center mt-16 mb-8">Showing Results For:</p>
+             <div class="rounded-xl my-16 bg-stone-100 grid grid-cols-1 py-16">
             
-            <form action="/home" method="get" class="grid grid-cols-1 mb-4 p-4 bg-stone-100 max-w-md text-lg rounded-xl mb-16" >
-              <select name="university_id" id="university_id" class="rounded-xl p-4 my-1">
-                  <% 
-                    if (uni_list) { 
-                      options = '';
-                      uni_list.forEach((result) => {
-                        options += '<option ';
-                        if (result.university_id == uni_id) {
-                          options += ' selected ';
-                        }
-                        options += 'value="' + result.university_id + '">' + result.university_name+ '</option>';
-                      })
-                      }; %> 
-                  <%- options %> 
-              </select>
-              <select name="time" id="time" class="rounded-xl p-4 my-1" >
-                <% 
-                      time_options = '';
-                      time_options += '<option ';
-                      if ("365days" == time) {
-                          time_options += ' selected ';
-                      }
-                      time_options += 'value="365days">Past Year</option>';
-                      time_options += '<option ';
-                      if ("31days" == time) {
-                          time_options += ' selected ';
-                      }
-                      time_options += 'value="31days">Past Month</option>';
-                      time_options += '<option ';
-                      if ("7days" == time) {
-                          time_options += ' selected ';
-                      }
-                      time_options += 'value="7days">Past Week</option>';
-                   %> 
-                  <%- time_options %> 
-              </select>
-              <button type="submit" class="p-2 rounded-xl bg-white mt-1 hover:bg-unigreen hover:text-white">Update</button>
-             </form>
+                <p class="text-5xl font-semibold ml-16">Search For A Song</p>
+                <!-- Search Bar -->
+                <form action="/search_song" method="get" class="ml-16" >
+                  <p class="text-xl p-1 text-gray-400 text-center max-w-md mx-auto my-8">Enter Drake, Taylor Swift, etc and click on the card to show that you are listening to it!</p>
+                  <div class="flex flex-row gap-4 max-w-xl mx-auto">
+                    <input id="search_query" name="search_query" class="bg-stone-200 rounded-xl text-xl w-full"></input>
+                    <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold w-2/6">Search</button>
+                  </div>
+                </form>
+          </div>
+             <!-- <p class="font-semibold text-4xl flex mx-auto text-center mt-16 mb-8">Data Graphs&nbsp; -->
+            <hr>
+            <p class="font-semibold text-4xl flex mx-auto text-center my-8">Trend Visualizations</p>
+            <a href="/data_trends" class="text-center mx-auto">
+              <div class="bg-stone-100 cursor-pointer p-12 mt-16 rounded-lg hover:bg-unigreen">
+                <div class="text-7xl text-center m-auto">📈</div>
+              </div> 
+            </a>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </main>
 
 <script type="text/javascript">
     function getval(sel) {
-      // console.log('bobbbbb',req.query.university_id);
       window.location.href = '?university_id='+sel.value;
     }
 </script>
