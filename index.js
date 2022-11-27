@@ -383,13 +383,27 @@ app.get("/university_chart", (req, res) => {
 //Route to view songs database
 app.get("/monthly_listens", async (req, res) => {
   
-  song_id = req.query.song_id;     //.song_id matches name="" attribute in ejs
+  title = req.query.title;     //.song_id matches name="" attribute in ejs
   monthly_data = [];
+  song_id = 0;
 
   // At this point, if user searches the exact song id they're looking for the data will be returned correctly...
+  const q = "SELECT song_id FROM songs WHERE title = $1"; 
+  values = [title];
+  db.one(q, values)
+    .then(async (data) => {
+      console.log("DATACAUGHT", data);
+      song_id = data.song_id;
+    })
+    .catch((err) => {
+      console.log("DATANOTCAUGHT", err);
+    });
+
+
+
+
 
   console.log("song id:", song_id);
-
   for(let i = 1; i < 13; i++){
     const query = "SELECT COUNT(song_id) FROM transactions WHERE EXTRACT(MONTH FROM load_timestamp) = $1 AND song_id = $2;";
     values = [i, song_id];

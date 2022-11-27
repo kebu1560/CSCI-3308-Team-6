@@ -8,57 +8,59 @@
         <div class="text-center">
             <!-- Search Bar -->
             <form action="/monthly_listens" method="GET">
-            <input id="song_id" name="song_id" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
+            <input id="title" name="title" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
             <!-- <a href="/search_song?q=Gunna"> -->
             <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold">Show Stats &nbsp;🔍</button>
             <!-- </a> -->
             </form>
         </div>
-        <div class="pt-16 max-w-5xl place-content-center">
-            <div class="chartCard">
-                <div class="chartBox">
-                    <canvas id="myChart"></canvas>
-                </div>
+    </div>
+    <div class="container mx-auto pt-16 max-w-5xl">
+        <div class="chartCard">
+            <div class="chartBox">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
     </div>
 
-
+    <% if(typeof monthly_data == 'undefined') { %>
+        '<script>const monthly_data = [0,0,0,0,0,0,0,0,0,0,0,0];document.write('here2');</script>'
+    <% } else { %>
+        '<script>const monthly_data = [<%= monthly_data %>];document.write('here');</script>'
+    <% } %>
     
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // setup 
+        //last month displayed on chart set to current month
         const date = new Date();
         let current_month = date.getMonth();
-        //current_month = 0;
         const min_month = current_month - 5;
         const max_month = current_month;
+        if (current_month < 5) {
+            min_month = 0;
+            max_month = 5;
+        }
 
-
-
-
-        const monthly_data = [<%= monthly_data %>];
         const data = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [{
                 label: 'Listens',
                 data: monthly_data,  // [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9]
                 backgroundColor: [
-                    'rgba(255, 26, 104, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)'
                 ],
                 borderColor: [
-                    'rgba(255, 26, 104, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)'
                 ],
                 borderWidth: 1
             }]
@@ -93,7 +95,7 @@
                     draw(ctx, x1, pixel) {
                         ctx.beginPath();
                         ctx.lineWidth = 3; //make a circle of 3 pixels for button
-                        ctx.strokeStyle = 'rgba(102, 102, 102, 0.5)';
+                        ctx.strokeStyle = 'rgb(230, 153, 0)';
                         ctx.fillStyle = 'white';   //customizing button colors
                         ctx.arc(x1, height / 2 + top, 15, angle * 0, angle * 360, false)   //ctx.arc(x, y, radius, angleS, angleE, false)
                         ctx.stroke();
@@ -102,7 +104,7 @@
 
                         ctx.beginPath(); //add arrow (chevron)
                         ctx.lineWidth = 3;
-                        ctx.strokeStyle = 'rgba(255, 26, 104, 1)';
+                        ctx.strokeStyle = 'rgb(230, 153, 0)';
                         ctx.moveTo(x1 + pixel, height / 2 + top - 7.5);
                         ctx.lineTo(x1 - pixel, height / 2 + top);
                         ctx.lineTo(x1 + pixel, height / 2 + top + 7.5);
