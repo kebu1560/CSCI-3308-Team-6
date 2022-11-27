@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <title>UniSpot</title>
+    <!-- TO-DO: Add the <link> tag to include bootstrap stylesheet -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
+    <script>
+    
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              unigreen: '#67e4aa',
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="text-center py-2 flex-col">
+    <!-- <div class="py-4 flex flex-row text-center mx-auto"> -->
+      <button class="text-4xl p-3 rounded-xl hover:bg-stone-100 cursor-pointer font-semibold flex mt-2 m-auto">
+          <a href="/home" class="text-center flex flex-row mx-auto">UniSpot</a>
+      </button>
+      <div class="ml-auto">
+        <!-- <button class="p-3 rounded-xl  text-lg font-semibold">
+          <a href="/search_song?q=Gunna">Search</a>
+        </button> -->
+        <!-- <button class="p-3 rounded-xl  text-lg font-semibold">
+          <a href="/trends">Trends</a> -->
+        <!-- </button> -->
+        <button class="p-3 rounded-xl  text-lg font-semibold">
+          <a href="/profile">Profile</a>
+        </button>
+        <button class="p-3 rounded-xl text-lg font-semibold ">
+          <a href="/logout">Log Out</a>
+        </button>
+      </div>
+  </div>
