@@ -382,17 +382,20 @@ app.get("/university_chart", (req, res) => {
 
 //Route to view songs database
 app.get("/monthly_listens", async (req, res) => {
-  console.log("get_song route");
-
-  song_id = req.query.song_id;
+  
+  song_id = req.query.song_id;     //.song_id matches name="" attribute in ejs
   monthly_data = [];
+
+  // At this point, if user searches the exact song id they're looking for the data will be returned correctly...
+
+  console.log("song id:", song_id);
 
   for(let i = 1; i < 13; i++){
     const query = "SELECT COUNT(song_id) FROM transactions WHERE EXTRACT(MONTH FROM load_timestamp) = $1 AND song_id = $2;";
     values = [i, song_id];
     await db.any(query, values)
       .then(async (data) => {
-        console.log("data is", data);
+        console.log("month " + i, data);
         monthly_data.push(parseInt(data[0].count));
       })
       .catch((err) => {
@@ -400,9 +403,10 @@ app.get("/monthly_listens", async (req, res) => {
         res.send("error");
       });
   }
-  res.send(monthly_data);
-    
+  //res.send(monthly_data);
+  res.render('pages/data_trends', monthly_data);
 });
+
 
 
 // 9

@@ -1,35 +1,56 @@
-<%- include ('../partials/header') %>
+<%- include ('../partials/headers_logged_in') %>
 
-<main>
-    <div class="chartCard">
-        <div class="chartBox">
-            <div class="dropdown">
-                <button class="dropbtn">Dropdown</button>
-                <div class="dropdown-content">
-                    <a href="#">Top Songs by Month</a>
-                    <a href="#">Views by Song</a>
-                    <a href="#">Link 3</a>
+<main class="mb-48 flex flex-col">
+    <div class="container mx-auto pt-10">
+        <div class="text-center">
+            <p class="text-3xl p-1 font-semibold text-gray-400 mb-8">Enter a song... and see when people are listening!</p>
+        </div>
+        <div class="text-center">
+            <!-- Search Bar -->
+            <form action="/monthly_listens" method="GET">
+            <input id="song_id" name="song_id" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
+            <!-- <a href="/search_song?q=Gunna"> -->
+            <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold">Show Stats &nbsp;🔍</button>
+            <!-- </a> -->
+            </form>
+        </div>
+        <div class="pt-16 max-w-5xl place-content-center">
+            <div class="chartCard">
+                <div class="chartBox">
+                    <canvas id="myChart"></canvas>
                 </div>
             </div>
-            <canvas id="myChart"></canvas>
         </div>
     </div>
+
+
+    
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // setup 
+        const date = new Date();
+        let current_month = date.getMonth();
+        //current_month = 0;
+        const min_month = current_month - 5;
+        const max_month = current_month;
+
+
+
+
+        const monthly_data = [<%= monthly_data %>];
         const data = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [{
                 label: 'Listens',
-                data: [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9],
+                data: monthly_data,  // [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9]
                 backgroundColor: [
                     'rgba(255, 26, 104, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(0, 0, 0, 0.2)'
+                    'rgba(255, 159, 64, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 26, 104, 1)',
@@ -37,8 +58,7 @@
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(0, 0, 0, 1)'
+                    'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
             }]
@@ -112,8 +132,8 @@
                 },
                 scales: {
                     x: {
-                        min: 0,
-                        max: 5
+                        min: min_month,
+                        max: max_month
                     },
                     y: {
                         beginAtZero: true
