@@ -55,10 +55,16 @@ var refresh_token = "";
 app.get("/", (req, res) => {
   // console.log("/ route");
   // res.send('home');
+  // if (res.session.user) {
+  //   res.render("pages/home");
+  // }
   res.render("pages/index"); // index is the first/welcome page for the / route
 });
 
 app.get("/home", (req, res) => {
+  if (!req.session.user) {
+    res.render("pages/login");
+  }
   // get universities for dropdown list
   var query = "SELECT * FROM universities;";
   var uni_list = null;
@@ -91,6 +97,7 @@ app.get("/home", (req, res) => {
         uni_list: uni_list,
         uni_id: university_id,
         time: time,
+        user: req.session.user,
       });
     })
     .catch((err) => {
@@ -109,11 +116,11 @@ const user = {
   username: undefined,
   password: undefined,
   university_id: undefined,
-}
+};
 
 app.post("/login", async (req, res) => {
   const username = req.body.username;
-  const query = 'SELECT * FROM users WHERE username = $1;';
+  const query = "SELECT * FROM users WHERE username = $1;";
   const values = [username];
   console.log("attempting to login");
 
@@ -130,14 +137,13 @@ app.post("/login", async (req, res) => {
           req.session.user = {
             api_key: process.env.API_KEY,
           };
-          db.one(query, values)
-          .then(data => {
+          db.one(query, values).then((data) => {
             user.username = data.username;
             user.password = data.password;
             user.university_id = data.university_id;
             req.session.user = user;
             req.session.save();
-            })
+          });
           return res.redirect("/home");
         } else {
           //incorrect password error
@@ -193,13 +199,13 @@ app.post("/register", async (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("/login");
+  res.redirect("pages/login");
 });
 
 // Route to log in to SPotify
 // Will likely be modified to fit into our own login endpoint
 app.get("/login2", (req, res) => {
-  console.log("/login route");
+  // console.log("/login route");
 
   // should be a random number. For our purposes, this should be fine
   var state = "superrandomnumber";
@@ -254,7 +260,7 @@ app.get("/search_song", async (req, res) => {
       num_songs = response.data.tracks.hits.length;
       num_artists = response.data.artists.hits.length;
 
-      console.log("$$$", response.data);
+      // console.log("$$$", response.data);
       //Checking to make sure there are results being sent back
       if (num_songs == 0 && num_artists == 0) {
         res.send("No search results ");
@@ -279,7 +285,7 @@ app.get("/search_song", async (req, res) => {
         });
       }
 
-      console.log(response.data.artists.hits[0]);
+      // console.log(response.data.artists.hits[0]);
       // Iterating through each artist and adding it to our response JSON
       for (let i = 0; i < num_artists; i++) {
         const avatar_image_link = response.data.artists.hits[i].artist.avatar;
@@ -290,9 +296,9 @@ app.get("/search_song", async (req, res) => {
         });
       }
 
-      console.log("params", params);
+      // console.log("params", params);
       // res.send(params);
-      res.render("pages/search", params);
+      res.render("pages/search", { params: params, user: req.session.user });
     })
     .catch(function (error) {
       console.error(error);
@@ -302,13 +308,13 @@ app.get("/search_song", async (req, res) => {
 
 // Route to get songs data stored in our database
 app.get("/get_song", (req, res) => {
-  console.log("get_song route");
+  // console.log("get_song route");
 
   const query = "SELECT * FROM songs;";
   values = [req.body];
   db.one(query, values)
     .then(async (data) => {
-      console.log("data is", data);
+      // console.log("data is", data);
       res.send(data);
     })
     .catch((err) => {
@@ -319,13 +325,13 @@ app.get("/get_song", (req, res) => {
 
 //Route to view songs database
 app.get("/songs_db", (req, res) => {
-  console.log("get_song route");
+  // console.log("get_song route");
 
   const query = "SELECT * FROM songs;";
   values = [req.body];
   db.any(query, values)
     .then(async (data) => {
-      console.log("data is", data);
+      // console.log("data is", data);
       res.send(data);
     })
     .catch((err) => {
@@ -336,13 +342,13 @@ app.get("/songs_db", (req, res) => {
 
 //Route to view transactions database
 app.get("/transactions_db", (req, res) => {
-  console.log("transactions_db route");
+  // console.log("transactions_db route");
 
   const query = "SELECT * FROM transactions;";
   values = [req.body];
   db.any(query, values)
     .then(async (data) => {
-      console.log("data is", data);
+      // console.log("data is", data);
       res.send(data);
     })
     .catch((err) => {
@@ -353,13 +359,13 @@ app.get("/transactions_db", (req, res) => {
 
 //Route to view songs database
 app.get("/universities_db", (req, res) => {
-  console.log("universities db route");
+  // console.log("universities db route");
 
   const query = "SELECT * FROM universities;";
   values = [req.body];
   db.any(query, values)
     .then(async (data) => {
-      console.log("data is", data);
+      // console.log("data is", data);
       res.send(data);
     })
     .catch((err) => {
@@ -383,7 +389,7 @@ app.get("/add_song", async (req, res) => {
   // CHecking if songs exists yet in our db
   const existenceQuery = "SELECT * FROM songs WHERE song_id = $1;";
   songExists = await db.any(existenceQuery, [req.query.song_id]);
-  console.log(songExists);
+  console.log("song exists:", songExists);
 
   // If song doesn't exist yet in the database we add it
   if (songExists.length == 0) {
@@ -412,7 +418,8 @@ app.get("/add_song", async (req, res) => {
     "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
   transactionValues = [song_id, username];
   await db.query(transactionQuery, transactionValues);
-  res.send("Added song to db");
+  // res.send("Added song to db");
+  res.render("pages/added_song");
 });
 
 //Route to see the top songs at universities
@@ -429,7 +436,7 @@ app.get("/university_chart", (req, res) => {
   values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
-      console.log("data::::", data);
+      // console.log("data::::", data);
       // res.send(data);
       res.render("pages/top_songs", { data: data });
     })
@@ -442,7 +449,7 @@ app.get("/university_chart", (req, res) => {
 // 9
 // Authentication Middleware.
 const auth = (req, res, next) => {
-  console.log(req.session);
+  // console.log(req.session);
   if (!req.session.user) {
     // Default to register page.
     return res.render("pages/register");
@@ -456,11 +463,11 @@ app.use(auth);
 app.listen(3000);
 console.log("Server is listening on port 3000");
 
-app.get('/profile', (req, res) => {
-  res.render('pages/profile', {
+app.get("/profile", (req, res) => {
+  res.render("pages/profile", {
     username: req.session.user.username,
     password: req.session.user.password,
-    university_id:req.session.user.university_id
+    university_id: req.session.user.university_id,
     //need to update this to reflect user ID and password (not functional yet)
+  });
 });
-})
