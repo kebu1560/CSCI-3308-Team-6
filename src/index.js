@@ -440,15 +440,28 @@ app.get("/monthly_listens", async (req, res) => {
   title = req.query.title; //.song_id matches name="" attribute in ejs
   monthly_data = [];
   song_id = 0;
+  let song = {
+    song_id: "",
+    title: "",
+    artist: "",
+    image_link: ""
+  };
+
 
   // At this point, if user searches the exact song id they're looking for the data will be returned correctly...
-  const q = "SELECT song_id FROM songs WHERE LOWER(title) = $1";
+  const q = "SELECT * FROM songs WHERE LOWER(title) = $1";
   values = [title.toLowerCase()];
   await db
     .one(q, values)
     .then(async (data) => {
       console.log("DATACAUGHT", data);
       song_id = data.song_id;
+      song = {
+        song_id: data.song_id,
+        title: data.title,
+        artist: data.artist,
+        image_link: data.image_link
+      };
     })
     .catch((err) => {
       console.log("DATANOTCAUGHT", err);
@@ -472,7 +485,8 @@ app.get("/monthly_listens", async (req, res) => {
   }
   //res.send(monthly_data);
   console.log("monthly_data:", monthly_data);
-  res.render("pages/data_trends", monthly_data);
+  console.log("song:", song);
+  res.render("pages/data_trends", {monthly_data, song});
 });
 
 app.get("/data_trends", (req, res) => {
