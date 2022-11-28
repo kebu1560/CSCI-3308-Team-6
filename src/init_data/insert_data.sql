@@ -20,7 +20,7 @@ INSERT INTO songs (song_id, title, artist, image_link) VALUES (435160184, 'Happi
 INSERT INTO songs (song_id, title, artist, image_link) VALUES (109582281, 'Timber', 'Pitbull', 'https://is4-ssl.mzstatic.com/image/thumb/Music125/v4/1b/c5/af/1bc5af7d-ba57-a2a2-02ce-5a07c1a1074b/886444305686.jpg/400x400cc.jpg');
 INSERT INTO songs (song_id, title, artist, image_link) VALUES (157666207, 'Blank Space', 'Taylor Swift', 'https://is2-ssl.mzstatic.com/image/thumb/Music124/v4/b2/38/d3/b238d354-1aec-f71b-8706-26fcb1738b6d/00843930039562.rgb.jpg/400x400cc.jpg');
 INSERT INTO songs (song_id, title, artist, image_link) VALUES (56890076, 'Starships', 'Nicki Minaj', 'https://is2-ssl.mzstatic.com/image/thumb/Music114/v4/e7/72/eb/e772eb78-dde7-617d-a760-754fb2793d0f/12UMGIM58531.rgb.jpg/400x400cc.jpg');
-INSERT INTO songs (song_id, title, artist, image_link) VALUES (136812777, 'Shut Up and Dance', 'Walk the Moon', 'https://is4-ssl.mzstatic.com/image/thumb/Music124/v4/dd/bb/b7/ddbbb775-836a-f7da-f89a-f33029f6ef4a/16UMGIM51585.rgb.jpg/400x400cc.jpg');
+INSERT INTO songs (song_id, title, artist, image_link) VALUES (136812777, 'Shut Up and Dance', 'Walk the Moon', 'https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/0c/13/ca/0c13ca44-3b42-95b1-340a-56304dd408c3/886444911689.jpg/400x400cc.jpg');
 INSERT INTO songs (song_id, title, artist, image_link) VALUES (52754378, 'Count on Me', 'Bruno Mars', 'https://is2-ssl.mzstatic.com/image/thumb/Music125/v4/98/ae/c2/98aec2e1-3be4-0311-1b44-69348fc87abb/075679956484.jpg/400x400cc.jpg');
 INSERT INTO songs (song_id, title, artist, image_link) VALUES (377495989, 'Girls Like You', 'Maroon 5', 'https://is3-ssl.mzstatic.com/image/thumb/Music115/v4/60/52/ef/6052efc1-c213-505c-5539-9e5e263d301e/17UM1IM31407.rgb.jpg/400x400cc.jpg');
 
