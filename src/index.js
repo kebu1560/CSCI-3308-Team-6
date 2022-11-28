@@ -486,7 +486,8 @@ app.get("/monthly_listens", async (req, res) => {
   //res.send(monthly_data);
   console.log("monthly_data:", monthly_data);
   console.log("song:", song);
-  res.render("pages/data_trends", {monthly_data, song});
+  const flag = 1;
+  res.render("pages/data_trends", {monthly_data, song, flag});
 });
 
 app.get("/data_trends", (req, res) => {
