@@ -1,33 +1,172 @@
-<%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
-<main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-        //using chart.js
-        var xyValues = [
-            { x: 50, y: 7 },
-            { x: 60, y: 8 },
-            { x: 70, y: 8 },
-            { x: 80, y: 9 },
-            { x: 90, y: 9 },
-            { x: 100, y: 9 },
-            { x: 110, y: 10 },
-            { x: 120, y: 11 },
-            { x: 130, y: 14 },
-            { x: 140, y: 14 },
-            { x: 150, y: 15 }
-        ];
+<%- include ('../partials/headers_logged_in') %>
 
-        var myChart = new Chart("myChart", {
-            type: "bar", //bar chart will fit songs data best???
-            data: [{
-                pointRadius: 4,
-                pointBackgroundColor: "rgba(0,0,255,1)",
-                data: xyValues
-            }],
-            options: {}
-        });
+<main class="mb-48 flex flex-col">
+    <div class="container mx-auto pt-10">
+        <div class="text-center">
+            <p class="text-3xl p-1 font-semibold text-gray-400 mb-8">Enter a song... and see when people are listening!</p>
+        </div>
+        <div class="text-center">
+            <!-- Search Bar -->
+            <form action="/monthly_listens" method="GET">
+            <input id="title" name="title" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
+            <!-- <a href="/search_song?q=Gunna"> -->
+            <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold">Show Stats &nbsp;🔍</button>
+            <!-- </a> -->
+            </form>
+        </div>
+    </div>
+    <div class="container mx-auto pt-16 max-w-5xl">
+        <div class="chartCard">
+            <div class="chartBox">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <% if(typeof monthly_data == 'undefined') { %>
+        '<script>const monthly_data = [0,0,0,0,0,0,0,0,0,0,0,0];document.write('undefined');</script>'
+    <% } else { %>
+        '<script>const monthly_data = [<%= monthly_data %>];document.write('this is good');</script>'
+    <% } %>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        //last month displayed on chart set to current month
+        const date = new Date();
+        let current_month = date.getMonth();
+        const min_month = current_month - 5;
+        const max_month = current_month;
+        if (current_month < 5) {
+            min_month = 0;
+            max_month = 5;
+        }
+        const data = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Listens',
+                data: monthly_data,  // [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9]
+                backgroundColor: [
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)',
+                    'rgb(255, 230, 179)'
+                ],
+                borderColor: [
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)',
+                    'rgb(230, 153, 0)'
+                ],
+                borderWidth: 1
+            }]
+        };
+        // moveChart block
+        const moveChart = {     //scrollable x-axis functionality
+            id: 'moveChart',
+            afterEvent(chart, args) {
+                const { ctx, canvas, chartArea: { left, right, top, bottom, width, height } } = chart;
+                canvas.addEventListener('mousemove', (event) => {
+                    const x = args.event.x;
+                    const y = args.event.y;
+                    //console.log('x:' + x + ' - ' + 'y:' + y)   //gives x and y coordinates of hover event
+                    if (x >= left - 15 && x <= left + 15 && y >= height / 2 + top - 15 && y <= height / 2 + top + 15) {
+                        canvas.style.cursor = 'pointer';    //chage to pointer when hovering over button
+                    } else if (x >= right - 15 && x <= right + 15 && y >= height / 2 + top - 15 && y <= height / 2 + top + 15) {
+                        canvas.style.cursor = 'pointer';
+                    } else {
+                        canvas.style.cursor = 'default';
+                    }
+                })
+            },
+            afterDraw(chart, args, pluginOptions) {
+                const { ctx, chartArea: { left, right, top, bottom, width, height } } = chart;
+                const angle = Math.PI / 180;
+                class CircleChevron {
+                    //constructor(x1,y1) {
+                    //}
+                    draw(ctx, x1, pixel) {
+                        ctx.beginPath();
+                        ctx.lineWidth = 3; //make a circle of 3 pixels for button
+                        ctx.strokeStyle = 'rgb(230, 153, 0)';
+                        ctx.fillStyle = 'white';   //customizing button colors
+                        ctx.arc(x1, height / 2 + top, 15, angle * 0, angle * 360, false)   //ctx.arc(x, y, radius, angleS, angleE, false)
+                        ctx.stroke();
+                        ctx.fill();
+                        ctx.closePath();
+                        ctx.beginPath(); //add arrow (chevron)
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = 'rgb(230, 153, 0)';
+                        ctx.moveTo(x1 + pixel, height / 2 + top - 7.5);
+                        ctx.lineTo(x1 - pixel, height / 2 + top);
+                        ctx.lineTo(x1 + pixel, height / 2 + top + 7.5);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+                let drawCircleLeft = new CircleChevron();
+                drawCircleLeft.draw(ctx, left, 5);
+                let drawCircleRight = new CircleChevron();
+                drawCircleRight.draw(ctx, right, -5);
+            }
+        }
+        // config 
+        const config = {
+            type: 'bar',
+            data,
+            options: {
+                layout: {
+                    padding: {
+                        right: 18
+                    }
+                },
+                scales: {
+                    x: {
+                        min: min_month,
+                        max: max_month
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            },
+            plugins: [moveChart]
+        };
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+        function moveScroll() {    //arrows become functional scrolling through data
+            const { ctx, canvas, chartArea: { left, right, top, bottom, width, height } } = myChart;
+            canvas.addEventListener('click', (event) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                if (x >= left - 15 && x <= left + 15 && y >= height / 2 + top - 15 && y <= height / 2 + top + 15) {  //scroll left
+                    myChart.options.scales.x.min = myChart.options.scales.x.min - 1;
+                    myChart.options.scales.x.max = myChart.options.scales.x.max - 1;
+                    if (myChart.options.scales.x.min <= 0) {
+                        myChart.options.scales.x.min = 0;
+                        myChart.options.scales.x.max = 5;
+                    }
+                }
+                if (x >= right - 15 && x <= right + 15 && y >= height / 2 + top - 15 && y <= height / 2 + top + 15) {   //scroll right
+                    myChart.options.scales.x.min = myChart.options.scales.x.min + 1;
+                    myChart.options.scales.x.max = myChart.options.scales.x.max + 1;
+                    if (myChart.options.scales.x.max >= data.datasets[0].data.length) {
+                        myChart.options.scales.x.min = data.datasets[0].data.length - 6;
+                        myChart.options.scales.x.max = data.datasets[0].data.length - 1;
+                    }
+                }
+                myChart.update();
+            })
+        }
+        myChart.ctx.onclick = moveScroll();
     </script>
-    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
 </main>
 
 <%- include ('../partials/footer') %>
