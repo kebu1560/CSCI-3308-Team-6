@@ -1,9 +1,31 @@
 <%- include ('../partials/headers_logged_in') %>
 
+<% if(typeof flag == 'undefined') { %>
+    <script>
+        var flag = 0;
+    </script>
+<% } else { %>
+    <script>
+        var flag = <%= flag %>;
+    </script>
+<% } %> 
+
+<script>
+    window.onload = function(){
+        console.log(flag);
+        if(flag == 0){  
+            document.getElementById("graphDIV").style.visibility='hidden';
+        } else if (flag == 1){
+            document.getElementById("graphDIV").style.visibility='visible';
+            flag = 0;
+        }
+    };
+</script>
+
 <main class="mb-48 flex flex-col">
     <div class="container mx-auto pt-10">
         <div class="text-center">
-            <p class="text-3xl p-1 font-semibold text-gray-400 mb-8">Enter a song... and see when people are listening!</p>
+            <p class="text-2xl p-1 font-semibold text-gray-400 mb-8">Enter a song and see when people are listening!</p>
         </div>
         <div class="text-center">
             <!-- Search Bar -->
@@ -15,18 +37,43 @@
             </form>
         </div>
     </div>
-    <div class="container mx-auto pt-16 max-w-5xl">
-        <div class="chartCard">
+
+    <div class="grid grid-cols-12 pt-16" id="graphDIV">
+        <div class="chartCard col-start-2 col-span-8 max-w-5xl">
             <div class="chartBox">
                 <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <div class="col-end-12 col-span-2 max-w-xl">
+            <div class="grid grid-rows-6">
+                <div class="row-span-1 text-left">
+                    <br>
+                    <p class="text-xl p-1 font-semibold text-gray-400 mb-3">Showing results for...</p>
+                </div>
+                <div class="grid grid-cols-1 row-span-5">
+                    <% if(typeof song != 'undefined') {
+                        cards = '';
+                        cards += '<div class="p-3 bg-stone-100 cursor-pointer rounded">';
+                        cards += '<img class="" src="' + song.image_link + '">';
+                        cards += '<div class="text-2xl font-semibold my-2">'+song.title+'</div>';
+                        cards += '<div class="mb-2">'+song.artist+'</div>';
+                        cards += '</div>';
+                        %>
+                        <%- cards %>
+                    <% } %>
+                </div>
             </div>
         </div>
     </div>
 
     <% if(typeof monthly_data == 'undefined') { %>
-        '<script>const monthly_data = [0,0,0,0,0,0,0,0,0,0,0,0];document.write('undefined');</script>'
+        <script>
+            const monthly_data = [0,0,0,0,0,0,0,0,0,0,0,0];
+        </script>
     <% } else { %>
-        '<script>const monthly_data = [<%= monthly_data %>];document.write('this is good');</script>'
+        <script>
+            const monthly_data = [<%= monthly_data %>];
+        </script>
     <% } %>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -129,7 +176,10 @@
                         max: max_month
                     },
                     y: {
-                        beginAtZero: true
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
                     }
                 }
             },
