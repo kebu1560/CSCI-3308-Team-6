@@ -81,6 +81,7 @@
         //last month displayed on chart set to current month
         const date = new Date();
         let current_month = date.getMonth();
+        let current_year = date.getFullYear();
         const min_month = current_month - 5;
         const max_month = current_month;
         if (current_month < 5) {
@@ -90,7 +91,7 @@
         const data = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [{
-                label: 'Listens',
+                label: 'Listens: '.concat(current_year),
                 data: monthly_data,  // [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9]
                 backgroundColor: [
                     'rgb(255, 230, 179)',
