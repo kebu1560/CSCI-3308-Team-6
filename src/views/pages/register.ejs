@@ -4,6 +4,13 @@
   <div class=" flex flex-col mx-auto p-8 bg-stone-100 rounded-lg">
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->
     <p class="font-semibold text-3xl p-4">Create Your UniSpot Account</p>
+    <% if (locals.message) { %>
+    <div
+      class="alert alert-<%- locals.error ? 'danger' : 'success' %>"
+      role="alert">
+      <%= message %>
+    </div>
+    <% } %>
     <form action="/register" method="post" class="bg-stone-100 p-8 rounded-xl  ">
       <div class="form-group" class="">
         <label for="username" class="font-semibold">Username</label>
@@ -13,6 +20,21 @@
         <label for="password" class="font-semibold">Password</label>
         <input type="password" class="p-2 my-2 rounded shadow w-full" id="password" name="password">
       </div>
+      <label for="university_id" class="font-semibold mb-2">University Name</label>
+      <br/>
+      <select name="university_id" id="university_id" class="rounded-xl p-4 my-2">
+          <% 
+          let options = '';
+          console.log('unilist', uni_list);
+            if (uni_list) { 
+              options = '';
+              uni_list.forEach((result) => {
+                options += '<option class="shadow"';
+                options += 'value="' + result.university_id + '">' + result.university_name+ '</option>';
+              })
+              }; %> 
+          <%- options %> 
+      </select>
       <button type="submit" class="p-3 rounded bg-unigreen text-white font-semibold mt-8 w-full">Create Account</button>
     </form>
     <a href="/login"  class="flex flex-row mt-4 text-center mx-auto">Have an account?&nbsp;<span class=" font-bold hover:underline">Sign in.</span></a>
