@@ -467,12 +467,7 @@ app.get("/monthly_listens", async (req, res) => {
     .catch((err) => {
       console.log("DATANOTCAUGHT", err);
       console.log("title:", title);
-      if(title != '--UNDEFINED--'){
-        flag = -1;
-      } else {
-        flag = 0;
-      }
-      title = '--UNDEFINED--';
+      flag = -1;
     });
 
   console.log("song id:", song_id);
