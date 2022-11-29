@@ -1,0 +1,17 @@
+November 29, 2022
+What have we done since the last meeting?
+*Fixed updating the popularity score when songs are liked
+*Update the cards to reflect new scores
+*Added drop downs to use from university and time frame
+*Fixed register page, now it works with different universities. 
+*Created a Profile Page
+*Inserted more dummy data
+*Worked on presentation
+*Worked on report
+What still needs to be done by deadlines?
+*One person needs to create a rapid API account (have enough calls from demo)
+*Create a demo video
+*Finish presentation
+*Finish report
+What are the challenges we are facing?
+*
