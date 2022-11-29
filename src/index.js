@@ -176,7 +176,18 @@ app.post("/login", async (req, res) => {
 app.get("/register", (req, res) => {
   // console.log("/login");
   // res.send('home');
-  res.render("pages/register");
+  var query = "SELECT * FROM universities;";
+  var uni_list = null;
+  db.any(query)
+    .then(async (data) => {
+      // res.render("pages/home", { data: data, users_uni: 1 });
+      uni_list = data;
+      res.render("pages/register", { uni_list: uni_list });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
 });
 
 app.post("/register", async (req, res) => {
@@ -187,7 +198,7 @@ app.post("/register", async (req, res) => {
   //need to check if user already exists?
 
   //Fine to register new user
-  const query = `INSERT INTO users (username, password, location, university_id) VALUES ('${username}','${hash}','Boulder',1);`;
+  const query = `INSERT INTO users (username, password, location, university_id) VALUES ('${username}','${hash}','Boulder',${req.body.university_id});`;
 
   db.any(query)
     .then(() => {
@@ -201,7 +212,7 @@ app.post("/register", async (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("pages/login");
+  res.render("pages/login");
 });
 
 // Route to log in to SPotify
@@ -452,9 +463,8 @@ app.get("/monthly_listens", async (req, res) => {
     song_id: "",
     title: "",
     artist: "",
-    image_link: ""
+    image_link: "",
   };
-
 
   // At this point, if user searches the exact song id they're looking for the data will be returned correctly...
   const q = "SELECT * FROM songs WHERE LOWER(title) = $1";
@@ -468,7 +478,7 @@ app.get("/monthly_listens", async (req, res) => {
         song_id: data.song_id,
         title: data.title,
         artist: data.artist,
-        image_link: data.image_link
+        image_link: data.image_link,
       };
     })
     .catch((err) => {
@@ -495,7 +505,7 @@ app.get("/monthly_listens", async (req, res) => {
   console.log("monthly_data:", monthly_data);
   console.log("song:", song);
   const flag = 1;
-  res.render("pages/data_trends", {monthly_data, song, flag});
+  res.render("pages/data_trends", { monthly_data, song, flag });
 });
 
 app.get("/data_trends", (req, res) => {
