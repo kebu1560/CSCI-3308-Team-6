@@ -478,7 +478,8 @@ app.get("/profile", (req, res) => {
     username: req.session.user.username,
     password: req.session.user.password,
     university_id: req.session.user.university_id,
-  });
+  }); //displays user info from session good to go
+
   const username = req.session.user.username;
   db.any(user_transactions,username)
     .then(async (data) => {
