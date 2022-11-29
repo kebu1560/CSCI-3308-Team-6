@@ -82,18 +82,20 @@ app.get("/home", (req, res) => {
   // console.log("university chart route");
 
   // Getting data from request
-  const university_id = req.query.university_id ? req.query.university_id : 1;
-  const limit = req.query.limit ? req.query.limit : 10;
-  const time = req.query.time ? req.query.time : "365days";
+  var university_id = req.query.university_id ? req.query.university_id : 1;
+  var limit = req.query.limit ? req.query.limit : 10;
+  var time = req.query.time ? req.query.time : "365 days";
+  var song_data = [];
 
   query =
-    "SELECT songs.song_id, songs.artist, songs.title, songs.image_link, COUNT (songs.title) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link, songs.song_id) ORDER BY(popularity_score) DESC LIMIT $3;";
+    "SELECT songs.song_id, songs.artist, songs.title, songs.image_link, COUNT (songs.song_id) AS popularity_score FROM transactions LEFT JOIN users ON users.username = transactions.username LEFT JOIN songs ON songs.song_id = transactions.song_id WHERE university_id = $1 AND transactions.load_timestamp BETWEEN NOW() - INTERVAL $2 AND NOW() GROUP BY(songs.title, songs.image_link, songs.song_id) ORDER BY(popularity_score) DESC LIMIT $3;";
   values = [university_id, time, limit];
   db.any(query, values)
     .then(async (data) => {
-      // console.log("data::::", data);
+      console.log("data::::", data);
+      song_data = data;
       res.render("pages/home", {
-        songs: data,
+        songs: song_data,
         uni_list: uni_list,
         uni_id: university_id,
         time: time,
@@ -185,7 +187,7 @@ app.post("/register", async (req, res) => {
   //need to check if user already exists?
 
   //Fine to register new user
-  const query = `INSERT INTO users (username, password, location) VALUES ('${username}','${hash}','Boulder');`;
+  const query = `INSERT INTO users (username, password, location, university_id) VALUES ('${username}','${hash}','Boulder',1);`;
 
   db.any(query)
     .then(() => {
@@ -380,7 +382,7 @@ app.get("/add_song", async (req, res) => {
   console.log("add_song route");
 
   // Setting vars
-  const song_id = req.query.song_id;
+  const song_id = parseInt(req.query.song_id);
   const title = req.query.title;
   const image_link = req.query.image_link;
   const artist = req.query.artist;
@@ -400,6 +402,7 @@ app.get("/add_song", async (req, res) => {
 
     const query =
       "INSERT INTO songs (song_id, title, image_link, artist) VALUES ($1, $2, $3, $4);";
+
     await db.query(query, songValues);
   }
   // If song already exists, don't try to add it
@@ -410,29 +413,34 @@ app.get("/add_song", async (req, res) => {
   // updating transactions table
   //Creating a var Date to load into the db
   let currentDate = new Date();
-  console.log("date", currentDate);
-  currentDate.toISOString().split("T")[0];
-  console.log("date", currentDate);
+  // console.log("date", currentDate);
+
+  // currentDate = `${currentDate.toISOString().split("T")[0]}`;
+  // console.log("date", currentDate);
 
   const transactionQuery =
-    "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
+    // "INSERT INTO transactions (song_id, username) VALUES ($1, $2);";
+    // "INSERT INTO transactions (song_id, username, load_timestamp) VALUES (49944485, 'User2', '2022-08-12T09:29:28.946Z');";
+    // "INSERT INTO transactions (song_id, username) VALUES (49944485, 'User2');";
+    `INSERT INTO transactions (song_id, username) VALUES (${song_id}, '${username}');`;
+
   transactionValues = [song_id, username];
-  await db.query(transactionQuery, transactionValues);
+  console.log("transactquery::", transactionQuery, transactionValues);
 
   db.any(transactionQuery, transactionValues)
     .then(async (data) => {
-      console.log("data::::", data);
+      // console.log("data::::", data);
       // res.send(data);
       // res.render("pages/top_songs", { data: data });
+      res.render("pages/added_song");
     })
     .catch((err) => {
       console.log(err);
       // res.send("error");
     });
 
-  console.log("here:::", transactionValues);
+  // console.log("here:::", transactionValues);
   // res.send("Added song to db");
-  res.render("pages/added_song");
 });
 
 //Route to view songs database
@@ -530,6 +538,21 @@ const auth = (req, res, next) => {
   }
   next();
 };
+
+app.get("/users_db", (req, res) => {
+  // console.log("users_db route");
+
+  const query = "SELECT * FROM users;";
+  db.any(query)
+    .then(async (data) => {
+      // console.log("data is", data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+});
 
 // Authentication Required
 app.use(auth);
