@@ -6,6 +6,7 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const { URLSearchParams } = require("url");
+const { query } = require("express");
 
 // database configuration
 const dbConfig = {
@@ -139,7 +140,7 @@ app.post("/login", async (req, res) => {
           };
           db.one(query, values).then((data) => {
             user.username = data.username;
-            user.password = data.password;
+            user.password = data.password.trim();
             user.university_id = data.university_id;
             req.session.user = user;
             req.session.save();
@@ -463,11 +464,46 @@ app.use(auth);
 app.listen(3000);
 console.log("Server is listening on port 3000");
 
+const user_transactions = `
+  SELECT
+    transactions.song_id,
+    transactions.transaction_id,
+    transactions.timestamp
+  FROM transactions
+  WHERE transactions.username = $1
+  `;
+ 
 app.get("/profile", (req, res) => {
   res.render("pages/profile", {
     username: req.session.user.username,
     password: req.session.user.password,
     university_id: req.session.user.university_id,
-    //need to update this to reflect user ID and password (not functional yet)
+  });
+  const username = req.session.user.username;
+  db.any(user_transactions,username)
+    .then(async (data) => {
+      res.render('pages/profile', { 
+        transactions: data
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
   });
 });
+/*
+app.get("/profile", (req, res) => {
+  values = [all_transactions];
+  db.any(values)
+    .then(async (data) => {
+      res.render('pages/profile', {
+      transactions
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+  });
+});
+
+*/
