@@ -16,83 +16,19 @@
                 </div>
               </div>
               </div>
-              
-            <!---
-            <div class="flex flex-col">
-                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                  <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="overflow-hidden">
-                      <table class="min-w-full">
-                        <thead class="border-b">
-                          <tr>
-                            <th scope="col" class="text-l font-medium text-gray-900 px-6 py-4 text-left">
-                              Username:
-                            </th>
-                            <th scope="col" class="text-l font-medium text-gray-900 px-6 py-4 text-left">
-                              Password:
-                            </th>
-                            <th scope="col" class="text-l font-medium text-gray-900 px-6 py-4 text-left">
-                              University:
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="border-b">
-                            <td class="text-l text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              PLACEHOLDER
-                            </td>
-                            <td class="text-l text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              PLACEHOLDER
-                            </td>
-                            <td class="text-l text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              PLACEHOLDER
-                            </td>
-                          </tr>
-                            </td>
-                        </tbody>
-                      </table>
-        </div> -->
-        <hr class="my-8 h-px bg-green-500 border-green-500 dark:bg-green-500">
-        <div class="flex flex-col">
-            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                  <table class="table">
-                    <thead>
-                        <th>Song ID</th>
-                        <th>Username</th>
-                        <th>Transaction ID</th>
-                        <th>Transactions</th>
-                    </thead>
-                    <tbody>
-                        <% transactions.forEach(username=> { %>
-                            <tr>
-                                <form>
-                                    <td>
-                                        <%= transactions.song_id %>
-                                    </td>
-                                </form>
-                                <form>
-                                    <td>
-                                        <%= transactions.username %>
-                                    </td>
-                                </form>
-                                <form>
-                                  <td>
-                                      <%= transactions.transaction_id %>
-                                  </td>
-                              </form>
-                              <form>
-                                <td>
-                                    <%= transactions.timestamp %>
-                                </td>
-                            </form>
-                          </tr>
-                          <% }) %>
-                    </tbody>
-                  </table>
-              </div>
-            </div>
+        <div class="mx-6 grid-cols-3 gap-4">
+                  <% 
+                if (transactions) { 
+                  cards = '';
+                  transactions.forEach((result) => {
+                    cards += '<div class="bg-stone-100 cursor-pointer rounded-xl hover:bg-unigreen p-4 ">';
+                    cards += '<img class="rounded" src="' + result.image_link + '">';
+                    cards += '<div class="grid grid-cols-1 mt-2 font-semibold">';
+                    cards += '<p class="text-lg text-center">'+result.title+'</p>';
+                    cards += '</div>';
+                    cards += '</div>';
+                  }) }; %> 
+                <%- cards %> 
           </div>
     </main>
     <%- include ('../partials/footer') %>
