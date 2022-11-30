@@ -1,0 +1,5 @@
+Stand-Up Call November 29, 2022
+Notes from Aishwarya
+*Maybe add search for a song, trends to navbar
+	*don't add a new page, instead it'll scroll down to that section 
+*
