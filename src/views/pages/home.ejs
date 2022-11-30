@@ -1,7 +1,7 @@
 <%- include ('../partials/headers_logged_in') %>
 
 
-<main class="mb-48 flex flex-col">
+<main class="mb-48 flex flex-col smooth-scroll>
     <div class="py-4">   
       <div class="grid grid-cols-1 gap-4">  
         <div class="grid grid-cols-1 gap-4 mx-16 rounded-xl">
@@ -73,8 +73,9 @@
                 <%- cards %> 
             </div>
              <div class="rounded-xl my-16 bg-stone-100 grid grid-cols-1 py-16">
-            
-                <p class="text-5xl font-semibold ml-16">Search For A Song</p>
+            <section id="search">
+              <p class="text-5xl font-semibold ml-16">Search For A Song</p>
+            </section>
                 <!-- Search Bar -->
                 <form action="/search_song" method="get" class="ml-16" >
                   <p class="text-xl p-1 text-gray-400 text-center max-w-md mx-auto my-8">Enter Drake, Taylor Swift, etc and click on the card to show that you are listening to it!</p>
@@ -86,10 +87,12 @@
           </div>
              <!-- <p class="font-semibold text-4xl flex mx-auto text-center mt-16 mb-8">Data Graphs&nbsp; -->
             <hr>
-            <p class="font-semibold text-4xl flex mx-auto text-center my-8">Trend Visualizations</p>
+            <section id="trend">
+              <p class="font-semibold text-4xl flex mx-auto text-center my-8">Data Visualizations</p>
+            </section>
             <a href="/data_trends" class="text-center mx-auto">
               <div class="bg-stone-100 cursor-pointer p-12 mt-16 rounded-lg hover:bg-unigreen">
-                <div class="text-7xl text-center m-auto">📈</div>
+                <img class="text-7xl text-center m-auto rounded-xl " src="https://www.educause.edu/-/media/images/educause/ecar/top-ten/2023/2023-it-issues-trends-rectangle.png?hash=D7C913FDB6F79CD04647218A604B4FDAB95A6C37&la=en"> 
               </div> 
             </a>
           </div>
