@@ -460,6 +460,7 @@ app.get("/monthly_listens", async (req, res) => {
   title = req.query.title; //.song_id matches name="" attribute in ejs
   monthly_data = [];
   song_id = 0;
+  flag = 1;
   let song = {
     song_id: "",
     title: "",
@@ -484,6 +485,8 @@ app.get("/monthly_listens", async (req, res) => {
     })
     .catch((err) => {
       console.log("DATANOTCAUGHT", err);
+      console.log("title:", title);
+      flag = -1;
     });
 
   console.log("song id:", song_id);
@@ -505,8 +508,7 @@ app.get("/monthly_listens", async (req, res) => {
   //res.send(monthly_data);
   console.log("monthly_data:", monthly_data);
   console.log("song:", song);
-  const flag = 1;
-  res.render("pages/data_trends", { monthly_data, song, flag });
+  res.render("pages/data_trends", {monthly_data, song, flag});
 });
 
 app.get("/data_trends", (req, res) => {

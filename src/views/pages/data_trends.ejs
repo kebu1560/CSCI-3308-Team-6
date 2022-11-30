@@ -18,6 +18,9 @@
         } else if (flag == 1){
             document.getElementById("graphDIV").style.visibility='visible';
             flag = 0;
+        } else if (flag == -1){
+            document.getElementById("graphDIV").style.visibility='hidden';
+            alert("This is not a song title our users have interacted with yet, enter another song title to see results...");
         }
     };
 </script>
@@ -29,7 +32,7 @@
         </div>
         <div class="text-center">
             <!-- Search Bar -->
-            <form action="/monthly_listens" method="GET">
+            <form action="/monthly_listens" method="GET" id="data_form">
             <input id="title" name="title" class="bg-stone-200 p-4 rounded-xl text-xl"></input>
             <!-- <a href="/search_song?q=Gunna"> -->
             <button type="submit" class="ml-1 p-4 rounded-xl bg-black text-white text-xl font-semibold">Show Stats &nbsp;🔍</button>
@@ -81,6 +84,7 @@
         //last month displayed on chart set to current month
         const date = new Date();
         let current_month = date.getMonth();
+        let current_year = date.getFullYear();
         const min_month = current_month - 5;
         const max_month = current_month;
         if (current_month < 5) {
@@ -90,7 +94,7 @@
         const data = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [{
-                label: 'Listens',
+                label: 'Listens: '.concat(current_year),
                 data: monthly_data,  // [18, 12, 6, 9, 12, 3, 9, 1, 19, 13, 4, 9]
                 backgroundColor: [
                     'rgb(255, 230, 179)',
