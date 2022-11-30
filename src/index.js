@@ -6,6 +6,7 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const { URLSearchParams } = require("url");
+const { query } = require("express");
 
 // database configuration
 const dbConfig = {
@@ -141,7 +142,7 @@ app.post("/login", async (req, res) => {
           };
           db.one(query, values).then((data) => {
             user.username = data.username;
-            user.password = data.password;
+            user.password = data.password.trim();
             user.university_id = data.university_id;
             req.session.user = user;
             req.session.save();
@@ -176,7 +177,18 @@ app.post("/login", async (req, res) => {
 app.get("/register", (req, res) => {
   // console.log("/login");
   // res.send('home');
-  res.render("pages/register");
+  var query = "SELECT * FROM universities;";
+  var uni_list = null;
+  db.any(query)
+    .then(async (data) => {
+      // res.render("pages/home", { data: data, users_uni: 1 });
+      uni_list = data;
+      res.render("pages/register", { uni_list: uni_list });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
 });
 
 app.post("/register", async (req, res) => {
@@ -187,7 +199,7 @@ app.post("/register", async (req, res) => {
   //need to check if user already exists?
 
   //Fine to register new user
-  const query = `INSERT INTO users (username, password, location, university_id) VALUES ('${username}','${hash}','Boulder',1);`;
+  const query = `INSERT INTO users (username, password, location, university_id) VALUES ('${username}','${hash}','Boulder',${req.body.university_id});`;
 
   db.any(query)
     .then(() => {
@@ -201,7 +213,7 @@ app.post("/register", async (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("pages/login");
+  res.render("pages/login");
 });
 
 // Route to log in to SPotify
@@ -453,9 +465,8 @@ app.get("/monthly_listens", async (req, res) => {
     song_id: "",
     title: "",
     artist: "",
-    image_link: ""
+    image_link: "",
   };
-
 
   // At this point, if user searches the exact song id they're looking for the data will be returned correctly...
   const q = "SELECT * FROM songs WHERE LOWER(title) = $1";
@@ -469,7 +480,7 @@ app.get("/monthly_listens", async (req, res) => {
         song_id: data.song_id,
         title: data.title,
         artist: data.artist,
-        image_link: data.image_link
+        image_link: data.image_link,
       };
     })
     .catch((err) => {
@@ -560,11 +571,49 @@ app.use(auth);
 app.listen(3000);
 console.log("Server is listening on port 3000");
 
+
+
 app.get("/profile", (req, res) => {
-  res.render("pages/profile", {
-    username: req.session.user.username,
-    password: req.session.user.password,
-    university_id: req.session.user.university_id,
-    //need to update this to reflect user ID and password (not functional yet)
+  
+  var username = req.session.user.username;
+
+  const user_transactions = `
+  SELECT 
+    transactions.song_id,
+    transactions.transaction_id,
+    transactions.load_timestamp,
+    songs.title,
+    songs.image_link 
+  FROM transactions 
+  LEFT JOIN songs ON songs.song_id = transactions.song_id 
+  WHERE transactions.username = $1 
+  `;
+
+  db.any(user_transactions,username)
+    .then(async (data) => {
+      res.render('pages/profile', {
+          username: req.session.user.username,
+          password: req.session.user.password,
+          university_id: req.session.user.university_id,
+           //displays user info from session good to go
+        
+        transactions: data
+    })
   });
 });
+/*
+app.get("/profile", (req, res) => {
+  values = [all_transactions];
+  db.any(values)
+    .then(async (data) => {
+      res.render('pages/profile', {
+      transactions
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send("error");
+    });
+  });
+});
+
+*/
