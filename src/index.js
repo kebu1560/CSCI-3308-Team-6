@@ -576,7 +576,7 @@ console.log("Server is listening on port 3000");
 app.get("/profile", (req, res) => {
   
   var username = req.session.user.username;
-
+ //query to grab song cards
   const user_transactions = `
   SELECT 
     transactions.song_id,
@@ -595,25 +595,8 @@ app.get("/profile", (req, res) => {
           username: req.session.user.username,
           password: req.session.user.password,
           university_id: req.session.user.university_id,
-           //displays user info from session good to go
-        
-        transactions: data
+          //displays user info from session good to go
+          transactions: data
     })
   });
 });
-/*
-app.get("/profile", (req, res) => {
-  values = [all_transactions];
-  db.any(values)
-    .then(async (data) => {
-      res.render('pages/profile', {
-      transactions
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send("error");
-    });
-  });
-});
-
-*/

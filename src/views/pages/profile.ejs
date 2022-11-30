@@ -3,13 +3,13 @@
       <div class="mx-auto">
                   <div class="px-6 py-4">
                   <p class="text-6xl font-semibold my-8 p-8 rounded bg-stone-100">Welcome, <%= username %></p>
-                  <p class="text-2xl font-semibold text-center my-8"> Your Liked Songs:</p>
+                  <p class="text-2xl font-semibold text-center my-8"> Your Recent Activity:</p>
         <div class="max-w-2xl mx-auto flex grid grid-cols-4 gap-4 mb-16">
                   <% 
                 if (transactions) { 
                   cards = '';
                   transactions.forEach((result) => {
-                    cards += '<div class="bg-stone-100 cursor-pointer rounded-xl hover:bg-unigreen p-4 ">';
+                    cards += '<div class="bg-stone-100 cursor-pointer rounded-xl p-4 ">';
                     cards += '<img class="rounded" src="' + result.image_link + '">';
                     cards += '<div class="grid grid-cols-1 mt-2 font-semibold">';
                     cards += '<p class="text-lg text-center">'+result.title+'</p>';
